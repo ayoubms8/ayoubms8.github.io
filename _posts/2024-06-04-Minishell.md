@@ -15,7 +15,7 @@ Minishell is a project focused on creating a Unix-like shell in the C programmin
 - [Introduction]
 - [Features]
 - [Concepts Learned]
-  - [Abstract Syntax Tree 
+  - [Abstract Syntax Tree (AST)]
   - [Interpreted Programming Language and Interpreter]
   - [Binary Tree]
   - [Child Process Creation in Linux]

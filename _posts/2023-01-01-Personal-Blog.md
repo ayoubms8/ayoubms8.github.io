@@ -1,6 +1,6 @@
 ---
 title: Personal Blog - Starting a personal blog hosted using github pages.
-date: 2024-06-01 10:19:00 +0100
+date: 2023-01-01 10:19:00 +0100
 categories: [Getting Started, Web Development, Jekyll]
 tags: [Jekyll, Github Pages, Static Site Generator, Markdown, AI, First Post, Web Design]
 render_with_liquid: false

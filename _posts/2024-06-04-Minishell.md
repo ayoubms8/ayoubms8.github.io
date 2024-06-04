@@ -10,6 +10,23 @@ render_with_liquid: false
 
 Minishell is a project focused on creating a Unix-like shell in the C programming language. The goal of this project is to develop a command-line interpreter similar to Bash, enabling users to interact with their operating system through a shell interface.
 
+## Table of Contents
+
+- [Introduction]
+- [Features]
+- [Concepts Learned]
+  - [Abstract Syntax Tree 
+  - [Interpreted Programming Language and Interpreter]
+  - [Binary Tree]
+  - [Child Process Creation in Linux]
+  - [Execution of Commands]
+  - [Output Redirection in Commands]
+  - [Interprocess Communication with Linux Signals and Pipes]
+- [Examples]
+  - [Running Commands]
+  - [Output Redirection]
+  - [Pipes]
+  - [Logical Operators]
 
 ## Introduction
 

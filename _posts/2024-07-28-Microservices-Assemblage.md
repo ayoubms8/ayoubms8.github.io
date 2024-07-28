@@ -14,6 +14,8 @@ Have you ever wondered if the division you decided for your microservices is opt
 
 Assemblage is a methodical approach to defining microservice architectures. It emphasizes the importance of accurately identifying services, delineating their responsibilities, defining APIs, and designing their interactions. This process ensures that the architecture is robust and easy to maintain, avoiding the pitfalls of a fragile distributed monolith.
 
+![Microservice Architecture](https://microservices.io/i/posts/assemblage-overview/Defining_Microservice_Architecture_V2.png)
+
 ### Key Steps in the Assemblage Process
 
 1. **Defining System Operations**:  

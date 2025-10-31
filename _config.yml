@@ -14,12 +14,12 @@ timezone:
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Le-blog # the main title
+title: Ayoub Lemsafi # the main title
 
-tagline: Blog of an aspiring AI researcher # it will display as the sub-title
+tagline: Blog of an aspiring software engineer # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
-  placeholder
+  A blog about my journey as a software engineer and my experiences in the field.
 
 # Fill in the protocol & hostname for your site.
 # e.g. 'https://username.github.io', note that it does not end with a '/'.

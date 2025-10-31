@@ -5,8 +5,6 @@ categories: [Cybersecurity, Capture The Flag, TryHackMe, Writeups]
 tags: [TryHackMe, Anonymous Room, SMB Enumeration, FTP Exploitation, Privilege Escalation]
 render_with_liquid: false
 ---
-
-TryHackMe — Anonymous Room Walkthrough
 =====================================
 
 Room Overview

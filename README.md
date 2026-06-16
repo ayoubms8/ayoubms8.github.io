@@ -1,61 +1,40 @@
-# Chirpy Starter
+# Personal Technical Blog
 
-[![Gem Version](https://img.shields.io/gem/v/jekyll-theme-chirpy)][gem]&nbsp;
-[![GitHub license](https://img.shields.io/github/license/cotes2020/chirpy-starter.svg?color=blue)][mit]
+This repository contains the source code and markdown articles for my personal technical blog, primarily focusing on detailed walkthroughs, architecture documentation, and implementation details for projects completed within the 1337 (42 Network) curriculum.
 
-When installing the [**Chirpy**][chirpy] theme through [RubyGems.org][gem], Jekyll can only read files in the folders
-`_data`, `_layouts`, `_includes`, `_sass` and `assets`, as well as a small part of options of the `_config.yml` file
-from the theme's gem. If you have ever installed this theme gem, you can use the command
-`bundle info --path jekyll-theme-chirpy` to locate these files.
+## Content Categories
 
-The Jekyll team claims that this is to leave the ball in the user’s court, but this also results in users not being
-able to enjoy the out-of-the-box experience when using feature-rich themes.
+The technical write-ups span several low-level and high-level domains:
+* **System Administration & DevOps**: Docker, Kubernetes, CI/CD pipelines, Infrastructure as Code (Terraform, Ansible).
+* **Cybersecurity**: Binary exploitation, reverse engineering, privilege escalation, memory corruption vulnerabilities (x86 architecture).
+* **Network Programming**: Custom IRC server implementation, socket programming, I/O multiplexing.
+* **Web Development**: Single Page Applications (SPA), real-time bidirectional communication (WebSockets), RESTful APIs.
+* **Computer Graphics**: Raycasting engines, 3D rendering in C.
 
-To fully use all the features of **Chirpy**, you need to copy the other critical files from the theme's gem to your
-Jekyll site. The following is a list of targets:
+## Project Write-ups Index
 
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
-```
+The posts directory contains comprehensive documentation for the following projects:
+1. **Cub3D**: 2D raycasting engine rendered in a 3D perspective using MinilibX.
+2. **Inception**: Multi-container infrastructure deploying a LEMP stack via Docker Compose.
+3. **ft_irc**: Non-blocking I/O Internet Relay Chat server written in C++98.
+4. **ft_transcendence**: Real-time multiplayer Pong SPA with OAuth2 and WebSockets using a microservices architecture.
+5. **Snowcrash**: Privilege escalation and Linux security models (CTF format).
+6. **Rainfall**: 32-bit x86 binary exploitation, buffer overflows, and format string vulnerabilities.
+7. **Override**: Advanced reverse engineering, anti-debugging circumvention, and exploit development.
+8. **Cloud-1**: Cloud infrastructure provisioning utilizing Terraform and Ansible.
+9. **Inception of Things**: GitOps continuous delivery pipeline with Kubernetes (K3s) and ArgoCD.
 
-To save you time, and also in case you lose some files while copying, we extract those files/configurations of the
-latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so that you can start writing in minutes.
+## Local Development
 
-## Prerequisites
+This blog utilizes standard static site generation logic (compatible with Jekyll/GitHub Pages formatting). 
 
-Follow the instructions in the [Jekyll Docs](https://jekyllrb.com/docs/installation/) to complete the installation of
-the basic environment. [Git](https://git-scm.com/) also needs to be installed.
-
-## Installation
-
-Sign in to GitHub and [**use this template**][use-template] to generate a brand new repository and name it
-`USERNAME.github.io`, where `USERNAME` represents your GitHub username.
-
-Then clone it to your local machine and run:
-
-```console
-$ bundle
-```
-
-## Usage
-
-Please see the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy#documentation).
-
-## Contributing
-
-The contents of this repository are automatically updated when new releases are made to the [main repository][chirpy].  
-If you have problems using it, or would like to participate in improving it, please go to the main repository for feedback!
-
-## License
-
-This work is published under [MIT][mit] License.
-
-[gem]: https://rubygems.org/gems/jekyll-theme-chirpy
-[chirpy]: https://github.com/cotes2020/jekyll-theme-chirpy/
-[use-template]: https://github.com/cotes2020/chirpy-starter/generate
-[CD]: https://en.wikipedia.org/wiki/Continuous_deployment
-[mit]: https://github.com/cotes2020/chirpy-starter/blob/master/LICENSE
+To run the site locally:
+1. Ensure Ruby and Bundler are installed on your system.
+2. Clone the repository: 
+   ```bash
+   git clone https://github.com/ayoubms8/ayoubms8.github.io.git
+   cd ayoubms8.github.io.git
+   bundle install
+   bundle exec jekyll serve
+   ```
+3. Navigate to http://localhost:4000 in your browser.

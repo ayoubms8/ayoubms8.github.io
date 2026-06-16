@@ -1,6 +1,6 @@
 ---
 title: Inception of Things - Kubernetes and GitOps
-date: 2024-07-05 10:00:00 +0100
+date: 2026-05-20 10:00:00 +0100
 categories: [DevOps, Container Orchestration, Cloud Native]
 tags: [Kubernetes, K3s, K3d, Vagrant, ArgoCD, GitOps]
 render_with_liquid: false

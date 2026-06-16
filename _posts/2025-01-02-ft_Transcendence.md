@@ -1,6 +1,6 @@
 ---
 title: ft_transcendence - Full-Stack Real-Time Application
-date: 2024-03-20 10:00:00 +0100
+date: 2024-01-02 10:00:00 +0100
 categories: [Web Development, Full-Stack, TypeScript]
 tags: [Vue/React, NestJS, PostgreSQL, WebSockets, SPA, OAuth2]
 render_with_liquid: false

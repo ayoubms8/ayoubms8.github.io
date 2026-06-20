@@ -58,8 +58,8 @@ Write a `Vagrantfile` to define and provision the cluster topology. The project 
     Vagrant.configure("2") do |config|
       config.vm.box = "debian/bullseye64"
 
-      config.vm.define "ansmsafiS" do |server|
-        server.vm.hostname = "ansmsafiS"
+      config.vm.define "alemsafiS" do |server|
+        server.vm.hostname = "alemsafiS"
         server.vm.network "private_network", ip: "192.168.56.110"
         server.vm.provider "virtualbox" do |vb|
           vb.memory = "1024"
@@ -68,8 +68,8 @@ Write a `Vagrantfile` to define and provision the cluster topology. The project 
         server.vm.provision "shell", path: "scripts/server.sh"
       end
 
-      config.vm.define "ansmsafiSW" do |worker|
-        worker.vm.hostname = "ansmsafiSW"
+      config.vm.define "alemsafiSW" do |worker|
+        worker.vm.hostname = "alemsafiSW"
         worker.vm.network "private_network", ip: "192.168.56.111"
         worker.vm.provider "virtualbox" do |vb|
           vb.memory = "1024"
@@ -106,8 +106,8 @@ Verify from the server node:
 
     $ kubectl get nodes -o wide
     NAME         STATUS   ROLES                  AGE   VERSION   INTERNAL-IP
-    ansmsafiS    Ready    control-plane,master   5m    v1.28.3   192.168.56.110
-    ansmsafiSW   Ready    <none>                 3m    v1.28.3   192.168.56.111
+    alemsafiS    Ready    control-plane,master   5m    v1.28.3   192.168.56.110
+    alemsafiSW   Ready    <none>                 3m    v1.28.3   192.168.56.111
 
 :three: Deploying Applications with Ingress Routing (Part 2) :
 

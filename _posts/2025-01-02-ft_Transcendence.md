@@ -3,7 +3,6 @@ title: ft_transcendence - Full-Stack Real-Time Application
 date: 2024-01-02 10:00:00 +0100
 categories: [Web Development, Full-Stack, TypeScript]
 tags: [Vue/React, NestJS, PostgreSQL, WebSockets, SPA, OAuth2, TypeScript, Real-time, JWT]
-image: /assets/img/posts/ft_transcendence/welcome-background.png
 render_with_liquid: false
 ---
 
@@ -15,9 +14,7 @@ A Single Page Application (SPA) relies on asynchronous data fetching to dynamica
 
 ft_transcendence is a 1337 project designed to synthesize full-stack development skills. The objective is to build a web platform featuring a real-time multiplayer Pong game, a chat system, user profiles, and OAuth2 authentication, utilizing a modern tech stack (e.g., NestJS for the backend, Vue.js or React for the frontend, and PostgreSQL).
 
-The platform supports three distinct game modes :
-
-![Game modes overview](/assets/img/posts/ft_transcendence/img.webp)
+The platform supports many distinct game modes :
 
 # Walkthrough :
 
@@ -93,15 +90,10 @@ The game is divided into three distinct match options:
 
 **1v1 mode** — two players compete in real-time on the same server instance :
 
-![1v1 Pong match](/assets/img/posts/ft_transcendence/play-1vs1.jpg)
-
 **vs Bot mode** — the server runs an AI-controlled paddle opposing the human player :
-
-![Player vs AI bot](/assets/img/posts/ft_transcendence/play-bot.jpg)
 
 **Tournament mode** — a bracket-based competition where players are matched sequentially until a winner is determined :
 
-![Tournament bracket](/assets/img/posts/ft_transcendence/play-Tournaments.jpg)
 
 :seven: User Profiles & Game Statistics :
 

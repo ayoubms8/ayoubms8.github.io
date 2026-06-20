@@ -2,7 +2,7 @@
 title: Snowcrash - Introduction to Cybersecurity and Privilege Escalation
 date: 2026-01-27 10:00:00 +0100
 categories: [Cybersecurity, System Administration, Reverse Engineering]
-tags: [CTF, Privilege Escalation, Linux, SUID, Reverse Engineering, Cron, Bash, Token]
+tags: [CTF, Privilege Escalation, Linux, SUID, Reverse Engineering, Cron, Bash, Binary Exploitation]
 render_with_liquid: false
 ---
 

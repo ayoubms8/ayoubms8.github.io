@@ -2,7 +2,7 @@
 title: Topiary - AI-Powered Industrial Digital Twin
 date: 2025-08-20 12:00:00 +0100
 categories: [AI, Hackathon, Industry]
-tags: [Python, FastAPI, React, Machine Learning, Digital Twin, LLM, OCP, "1337"]
+tags: [Python, FastAPI, React, Machine Learning, Digital Twin, LLM, OCP, "1337", Docker, scikit-learn, Optimization]
 render_with_liquid: true
 ---
 

@@ -2,7 +2,7 @@
 title: Inception - System Administration and Virtualization
 date: 2024-01-10 10:00:00 +0100
 categories: [System Administration, DevOps, Docker]
-tags: [Docker, Docker-compose, Nginx, MariaDB, WordPress, Virtualization]
+tags: [Docker, Docker-compose, Nginx, MariaDB, WordPress, Virtualization, Linux, DevOps]
 render_with_liquid: false
 ---
 

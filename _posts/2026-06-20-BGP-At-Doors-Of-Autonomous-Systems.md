@@ -2,83 +2,219 @@
 title: BGP - At Doors of Autonomous Systems
 date: 2026-06-20 11:00:00 +0100
 categories: [Networking, Routing, Infrastructure]
-tags: [BGP, VXLAN, GNS3, FRRouting, Networking]
+tags: [BGP, VXLAN, GNS3, FRRouting, Networking, EVPN, Underlay, Overlay]
 render_with_liquid: false
 ---
 
 # Introduction :
 
-Border Gateway Protocol (BGP) is the routing protocol that holds the internet together. It is the "postal service" of the internet — when data is submitted, BGP is responsible for looking at all available paths and picking the best route. It is the only protocol designed to deal with a network of the internet's size and is the only protocol that can handle the large number of Autonomous Systems (AS) on the internet.
+Border Gateway Protocol (BGP) is the routing protocol that holds the internet together. It is the only protocol designed to exchange routing information between independently administered networks — called Autonomous Systems (AS) — at internet scale. While interior routing protocols like OSPF or EIGRP manage routes within a single organization's network, BGP manages routes **between** organizations, ISPs, and data centers. Every time you visit a website, BGP is what ensures your packets take a valid path across the dozens of networks between you and the server.
 
 # Project goals :
 
-BGP At Doors of Autonomous Systems is a 1337 project focused on network virtualization and dynamic routing. The goal is to build a virtual network infrastructure using GNS3, configure BGP and VXLAN overlays with FRRouting (FRR), and understand how large-scale internet routing works through hands-on simulation.
+BGP At Doors of Autonomous Systems is a 1337 project focused on network virtualization and dynamic routing. The project is divided into two parts:
+- **Part 1**: Build a simple GNS3 topology with VXLAN tunnels to understand the overlay/underlay concept.
+- **Part 2**: Replace the flood-and-learn VXLAN control plane with a BGP EVPN control plane using FRRouting, simulating a modern data center fabric.
+
+# Network Architecture Overview :
+
+    ┌──────────────────────────────────────────────────────────────────┐
+    │                       BGP EVPN Fabric                            │
+    │                                                                  │
+    │          ┌────────────┐        ┌────────────┐                    │
+    │          │  Spine 1   │        │  Spine 2   │  ← Route Reflectors│
+    │          │ ASN 65000  │        │ ASN 65000  │                    │
+    │          └─────┬──────┘        └─────┬──────┘                    │
+    │                │ eBGP               │ eBGP                       │
+    │       ┌────────┴────┐         ┌─────┴───────┐                   │
+    │       │   Leaf 1    │  VXLAN  │   Leaf 2    │  ← VTEPs           │
+    │       │  ASN 65001  │◄───────►│  ASN 65002  │                   │
+    │       └──────┬──────┘         └──────┬──────┘                   │
+    │              │                        │                          │
+    │         ┌────┴────┐             ┌─────┴────┐                    │
+    │         │  Host A  │             │  Host B  │                    │
+    │         │10.0.0.1  │             │10.0.0.2  │                    │
+    │         └─────────┘             └──────────┘                    │
+    └──────────────────────────────────────────────────────────────────┘
+
+| Layer | Technology | Role |
+|---|---|---|
+| **Underlay** | IP routing (OSPF or static) | Provides routed connectivity between VTEPs |
+| **Overlay** | VXLAN (UDP port 4789) | Carries Layer 2 frames across the Layer 3 underlay |
+| **Control Plane** | BGP EVPN | Distributes MAC/IP reachability instead of flooding |
 
 # Walkthrough :
 
-:one: Setting up the virtual environment (GNS3) :
+:one: Setting up the GNS3 Virtual Lab :
 
-Install GNS3 and pull the required Docker images for the project routers and hosts. The topology consists of routers running FRRouting and simple Alpine Linux hosts connected to simulate a real-world network.
+Install GNS3 and the GNS3 VM (which provides a nested virtualization environment for Docker-based nodes). Pull the required Docker images:
 
     docker pull frrouting/frr:latest
     docker pull alpine:latest
 
-:two: Configuring VXLAN overlays :
+In GNS3, add the FRR image as a Docker appliance and create your topology by dragging nodes onto the canvas and drawing links between them. Each FRR router node will have a terminal accessible directly from GNS3.
 
-VXLAN (Virtual Extensible LAN) encapsulates Layer 2 Ethernet frames over a Layer 3 UDP network. Configure VXLAN tunnels on the leaf routers to create a virtual overlay network that stretches across different routing domains.
+Verify FRR is running inside a router node:
 
-    ip link add vxlan10 type vxlan id 10 dstport 4789 local 10.1.1.1 nolearning
+    # Inside a GNS3 FRR node terminal
+    $ vtysh
+    Router# show version
+    FRRouting 9.x (hostname) on Linux
+
+:two: Configuring the Underlay (IP Connectivity Between VTEPs) :
+
+Before VXLAN can work, the VTEP (VXLAN Tunnel Endpoint) router loopback addresses must be reachable from each other across the underlay. Use OSPF or simple static routes depending on the topology:
+
+    # Configure loopback on Leaf 1 (used as VTEP source IP)
+    Router# configure terminal
+    Router(config)# interface lo
+    Router(config-if)# ip address 1.1.1.1/32
+    Router(config-if)# exit
+
+    # Configure interface toward Spine
+    Router(config)# interface eth0
+    Router(config-if)# ip address 10.0.12.1/30
+    Router(config-if)# exit
+
+    # Enable OSPF for underlay reachability
+    Router(config)# router ospf
+    Router(config-router)# network 0.0.0.0/0 area 0
+    Router(config-router)# exit
+
+Verify underlay connectivity:
+
+    Router# ping 2.2.2.2 source 1.1.1.1
+    !!!!!
+
+:three: Configuring VXLAN Tunnels (Part 1 — Flood and Learn) :
+
+VXLAN encapsulates Layer 2 Ethernet frames inside UDP packets. On each leaf router (acting as a VTEP), create a VXLAN interface for each L2 segment (VNI) and bridge it:
+
+    # On Leaf 1 — create VXLAN interface for VNI 10
+    ip link add vxlan10 type vxlan \
+      id 10 \
+      dstport 4789 \
+      local 1.1.1.1 \
+      remote 2.2.2.2 \    # peer VTEP (flood-and-learn uses static remote)
+      nolearning
+
     ip link set vxlan10 up
-    brctl addbr br10
-    brctl addif br10 vxlan10
+
+    # Bridge the VXLAN interface with the local host-facing interface
+    ip link add br10 type bridge
+    ip link set vxlan10 master br10
+    ip link set eth1 master br10         # eth1 faces Host A
     ip link set br10 up
 
-:three: Configuring BGP with FRRouting :
+    # Assign a gateway IP to the bridge for L3 routing
+    ip addr add 192.168.1.1/24 dev br10
 
-Enter the FRR `vtysh` shell and configure BGP on each router. Define the Autonomous System number and advertise the relevant networks. Use BGP EVPN (Ethernet VPN) address family to distribute MAC and IP reachability information across the VXLAN fabric.
+:four: Replacing Flood-and-Learn with BGP EVPN (Part 2) :
 
-    router bgp 65001
-      bgp router-id 1.1.1.1
-      neighbor 10.0.0.2 remote-as 65002
-      !
-      address-family l2vpn evpn
-        neighbor 10.0.0.2 activate
-        advertise-all-vni
-      exit-address-family
+In Part 1, each VTEP needs a static list of all remote VTEPs. BGP EVPN eliminates this by dynamically distributing MAC/IP bindings and VTEP membership through BGP. Configure each leaf with `advertise-all-vni` and point neighbors to the spine as a Route Reflector:
 
-:four: Verifying BGP sessions and routes :
+    # vtysh on Leaf 1
+    Router# configure terminal
 
-Use `vtysh` commands to inspect BGP neighbor states, learned routes, and EVPN table entries. A successful setup shows all neighbors in the `Established` state and EVPN type-2 (MAC/IP) and type-3 (Inclusive Multicast) routes being exchanged.
+    Router(config)# router bgp 65001
+    Router(config-router)# bgp router-id 1.1.1.1
+    Router(config-router)# no bgp default ipv4-unicast
+    Router(config-router)# neighbor 10.0.12.2 remote-as 65000    ! toward Spine
+    Router(config-router)# neighbor 10.0.12.2 update-source lo
+    Router(config-router)# !
+    Router(config-router)# address-family l2vpn evpn
+    Router(config-router-af)#   neighbor 10.0.12.2 activate
+    Router(config-router-af)#   advertise-all-vni
+    Router(config-router-af)# exit-address-family
+    Router(config-router)# exit
 
-    show bgp summary
-    show bgp l2vpn evpn
-    show bgp l2vpn evpn route type macip
+    # vtysh on Spine (Route Reflector)
+    Router(config)# router bgp 65000
+    Router(config-router)# bgp router-id 10.10.10.10
+    Router(config-router)# neighbor 10.0.12.1 remote-as 65001
+    Router(config-router)# neighbor 10.0.23.1 remote-as 65002
+    Router(config-router)# !
+    Router(config-router)# address-family l2vpn evpn
+    Router(config-router-af)#   neighbor 10.0.12.1 activate
+    Router(config-router-af)#   neighbor 10.0.23.1 activate
+    Router(config-router-af)#   neighbor 10.0.12.1 route-reflector-client
+    Router(config-router-af)#   neighbor 10.0.23.1 route-reflector-client
+    Router(config-router-af)# exit-address-family
 
-:five: Testing end-to-end connectivity :
+:five: Verifying BGP Sessions and EVPN Routes :
 
-From a host in one VXLAN segment, ping a host in another segment on a different router. Successful replies confirm that the BGP EVPN control plane is correctly distributing MAC reachability and that VXLAN is properly encapsulating and forwarding traffic across the underlay network.
+Use `vtysh` to inspect the BGP neighbor state and EVPN route table. All neighbors should be in `Established` state and EVPN Type-2 (MAC/IP) and Type-3 (IMET — Inclusive Multicast Ethernet Tag) routes should be visible:
 
+    Router# show bgp summary
+    Neighbor   AS      MsgRcvd MsgSent   State/PfxRcd
+    10.0.12.2  65000   150     145       Established/3
+
+    Router# show bgp l2vpn evpn
+    BGP table version is 6, local router ID is 1.1.1.1
+    Route Distinguisher: 1.1.1.1:10
+       *> [2]:[0]:[48]:[aa:bb:cc:dd:ee:ff]   (MAC/IP route — Type 2)
+       *> [3]:[0]:[32]:[1.1.1.1]              (IMET route — Type 3)
+
+    Router# show bgp l2vpn evpn route type macip
+    Router# show vxlan fdb                    # forwarding database
+    Router# show evpn vni                     # VNI state
+
+:six: End-to-End Connectivity Testing :
+
+From Host A (connected to Leaf 1), ping Host B (connected to Leaf 2). The VXLAN encapsulation and BGP EVPN control plane handle the forwarding transparently:
+
+    # On Host A (Alpine Linux container in GNS3)
+    / # ip addr add 192.168.1.10/24 dev eth0
+    / # ip route add default via 192.168.1.1
+
+    # On Host B
+    / # ip addr add 192.168.1.20/24 dev eth0
+
+    # From Host A
     / # ping 192.168.1.20
     PING 192.168.1.20 (192.168.1.20): 56 data bytes
-    64 bytes from 192.168.1.20: seq=0 ttl=64 time=1.2 ms
+    64 bytes from 192.168.1.20: seq=0 ttl=64 time=1.4 ms
+    64 bytes from 192.168.1.20: seq=1 ttl=64 time=0.9 ms
+
+    # Confirm that the MAC was learned via BGP, not by flooding:
+    Router# show evpn mac vni 10
+    VNI 10
+    MAC               Intf/Remote VTEP         State   Seq #'s
+    aa:bb:cc:dd:ee:ff 2.2.2.2                  remote  0/0
 
 # Questions and answers
 
 :question: What is an Autonomous System (AS)?
 
-> An Autonomous System is a collection of IP routing prefixes under the control of one or more network operators that presents a common and clearly defined routing policy to the internet. Each AS is assigned a unique Autonomous System Number (ASN) by an internet registry. BGP is the protocol used by these ASes to exchange routing information with each other.
+> An Autonomous System is a collection of IP routing prefixes under the administrative control of one or more network operators that presents a **single, coherent routing policy** to the rest of the internet. Each AS is identified by a globally unique **Autonomous System Number (ASN)** assigned by IANA or a Regional Internet Registry (RIR). BGP is the interdomain routing protocol that exchanges reachability information between ASes. ASNs can be 16-bit (1–65535) or 32-bit (up to ~4.3 billion), with 64512–65535 reserved for private use.
 
 :question: What is the difference between iBGP and eBGP?
 
-> eBGP (External BGP) is used between routers in *different* Autonomous Systems to exchange routes across the internet. iBGP (Internal BGP) is used between routers *within the same* Autonomous System to ensure consistent routing information inside the AS. A key rule of iBGP is that routes learned from one iBGP peer cannot be re-advertised to another iBGP peer (to prevent routing loops), which is solved using either a full-mesh topology or a Route Reflector.
+> **eBGP (External BGP)** sessions are formed between routers in **different** Autonomous Systems. The TTL of eBGP packets is 1 by default, meaning peers must typically be directly connected. **iBGP (Internal BGP)** sessions are formed between routers **within the same** AS to propagate externally learned routes across the AS. A critical iBGP rule is the **split-horizon rule**: routes learned from one iBGP peer cannot be re-advertised to another iBGP peer. This is solved by either a **full-mesh** iBGP topology (all routers peer with all others) or a **Route Reflector** (one router redistributes routes to all iBGP clients, as used in the Spine in this project).
+
+:question: What is VXLAN and why is it needed in modern data centers?
+
+> VXLAN (Virtual Extensible LAN, RFC 7348) is a network overlay protocol that encapsulates Layer 2 Ethernet frames inside Layer 3 UDP packets (port 4789). It was created to overcome the VLAN limitation of 4096 unique segments — VXLAN uses a 24-bit VNI (VXLAN Network Identifier), allowing over 16 million virtual segments. In modern data centers with thousands of tenants and containers, this scale is essential. VXLAN allows Layer 2 adjacency to be extended across a routed Layer 3 underlay — a technique called an **overlay network**.
 
 :question: What is BGP EVPN and why is it used with VXLAN?
 
-> BGP EVPN (Ethernet VPN) is an extension to BGP that carries MAC address and IP reachability information (traditionally a Layer 2 concern) as BGP routes. When used with VXLAN, it replaces the traditional flood-and-learn mechanism with a control-plane-driven approach: instead of flooding unknown traffic, routers advertise their locally learned MAC/IP bindings via BGP EVPN, so all peers know exactly which VTEP (VXLAN Tunnel Endpoint) to send traffic to. This results in a more scalable, efficient, and loop-free overlay network.
+> BGP EVPN (Ethernet VPN, RFC 7432 + RFC 8365) is an address family extension to BGP that carries MAC address and IP reachability information as BGP routes. When combined with VXLAN, it replaces the traditional **flood-and-learn** mechanism (where unknown MACs are flooded to all VTEPs) with a **control-plane-driven** approach. Each VTEP advertises its locally learned MAC/IP bindings via BGP EVPN Type-2 routes, and VTEP membership via Type-3 IMET routes. This eliminates BUM (Broadcast, Unknown unicast, Multicast) flooding, dramatically reducing unnecessary traffic in large fabrics.
+
+:question: What is a VTEP and what role does it play?
+
+> A VTEP (VXLAN Tunnel Endpoint) is a network device (physical or virtual) that originates and terminates VXLAN tunnels. On the sending side, it encapsulates an Ethernet frame with a VXLAN header (containing the VNI), a UDP header (port 4789), and an outer IP header (using the VTEP's IP as source, and the remote VTEP's IP as destination). On the receiving side, it strips the outer headers and delivers the original Ethernet frame to the local bridge/segment. In this project, each FRR leaf router acts as a VTEP.
+
+:question: What are BGP EVPN route types and what does each carry?
+
+> BGP EVPN defines several route types. **Type 1 (Ethernet Auto-Discovery)**: used for multi-homing fast convergence. **Type 2 (MAC/IP Advertisement)**: carries a specific MAC address and optionally its associated IP address, allowing VTEPs to learn remote MAC-to-VTEP mappings without flooding. **Type 3 (Inclusive Multicast Ethernet Tag / IMET)**: advertises a VTEP's participation in a VNI, used to build the BUM flooding tree. **Type 5 (IP Prefix Route)**: carries IP prefixes for inter-subnet routing (L3 VPN). Types 2 and 3 are the most commonly used and are what this project configures via `advertise-all-vni`.
 
 # Ressources :
 
 * BGP RFC 4271 : https://www.rfc-editor.org/rfc/rfc4271
+* VXLAN RFC 7348 : https://www.rfc-editor.org/rfc/rfc7348
+* BGP EVPN RFC 7432 : https://www.rfc-editor.org/rfc/rfc7432
 * FRRouting BGP Documentation : https://docs.frrouting.org/en/latest/bgp.html
-* VXLAN BGP EVPN Explained : https://vincent.bernat.ch/en/blog/2017-vxlan-bgp-evpn
+* FRRouting EVPN Documentation : https://docs.frrouting.org/en/latest/evpn.html
+* VXLAN BGP EVPN Deep Dive : https://vincent.bernat.ch/en/blog/2017-vxlan-bgp-evpn
 * GNS3 Documentation : https://docs.gns3.com/
+* Cumulus Networks EVPN Guide : https://docs.nvidia.com/networking-ethernet-software/cumulus-linux/Network-Virtualization/Ethernet-Virtual-Private-Network-EVPN/

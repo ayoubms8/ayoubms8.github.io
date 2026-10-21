@@ -2,18 +2,26 @@
 .bundle
 vendor
 Gemfile.lock
+blog/.bundle
+blog/vendor
+blog/Gemfile.lock
 
 # Jekyll cache
 .jekyll-cache
 .jekyll-metadata
 _site
+blog/.jekyll-cache
+blog/.jekyll-metadata
+blog/_site
 
 # RubyGems
 *.gem
 
-# NPM dependencies
+# NPM / Vite
 node_modules
-package-lock.json
+dist
+dist-ssr
+*.local
 
 # IDE configurations
 .idea
@@ -24,3 +32,5 @@ package-lock.json
 # Misc
 _sass/dist
 assets/js/dist
+blog/_sass/dist
+blog/assets/js/dist

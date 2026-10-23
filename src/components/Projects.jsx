@@ -1,11 +1,162 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ExternalLink, Terminal, Sparkles } from 'lucide-react';
 import { PROJECTS, FEATURED_PROJECT, FILTER_CATEGORIES } from '../data/portfolioData';
-import { useInView } from '../hooks/useInView';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
   const [activeFilter, setActiveFilter] = useState('all');
-  const [sectionRef, inView] = useInView({ threshold: 0.08 });
+  const sectionRef = useRef(null);
+  const featuredRef = useRef(null);
+  const gridRef = useRef(null);
+  const isInitialMount = useRef(true);
+
+  // 1. Initial ScrollTrigger setup for Section Header, Featured Project, and Grid
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header timeline
+      const headerTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 78%',
+          once: true
+        }
+      });
+
+      headerTl
+        .fromTo(
+          '.projects-label-line',
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.65, ease: 'power3.out' }
+        )
+        .fromTo(
+          '.projects-label-text',
+          { opacity: 0, x: -15 },
+          { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' },
+          '-=0.35'
+        )
+        .fromTo(
+          '#projects-title',
+          { opacity: 0, y: 30 },
+          { opacity: 1, y: 0, duration: 0.75, ease: 'power3.out' },
+          '-=0.25'
+        )
+        .fromTo(
+          '#filter-tabs',
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' },
+          '-=0.3'
+        );
+
+      // Featured Project Entrance & Scroll Parallax
+      if (featuredRef.current) {
+        const featTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top 80%',
+            once: true
+          }
+        });
+
+        featTl
+          .fromTo(
+            featuredRef.current,
+            { opacity: 0, y: 40, scale: 0.97 },
+            { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power3.out' }
+          )
+          .fromTo(
+            '.feat-highlights li',
+            { opacity: 0, x: -18 },
+            { opacity: 1, x: 0, duration: 0.5, stagger: 0.08, ease: 'power2.out' },
+            '-=0.4'
+          );
+
+        // Counter-rotating bare-metal emblems on scroll scrub
+        gsap.to('.feat-hex-1', {
+          rotation: 75,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5
+          }
+        });
+
+        gsap.to('.feat-hex-2', {
+          rotation: -75,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.5
+          }
+        });
+
+        gsap.to('.feat-visual', {
+          yPercent: -10,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: featuredRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1.2
+          }
+        });
+      }
+
+      // Initial Projects Grid Reveal
+      if (gridRef.current) {
+        gsap.fromTo(
+          '.project-card',
+          { opacity: 0, y: 40, scale: 0.96 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            stagger: 0.08,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: 'top 82%',
+              once: true
+            }
+          }
+        );
+      }
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // 2. Smooth GSAP entrance whenever the category filter changes
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.project-card',
+        { opacity: 0, y: 25, scale: 0.97 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.45,
+          stagger: 0.04,
+          ease: 'power2.out'
+        }
+      );
+    }, gridRef);
+
+    return () => ctx.revert();
+  }, [activeFilter]);
 
   const handleMouseMove = (e) => {
     const card = e.currentTarget;
@@ -29,23 +180,17 @@ export default function Projects() {
   return (
     <section id="projects" ref={sectionRef}>
       <div className="section-inner">
-        <div className={`section-label reveal ${inView ? 'is-visible' : ''}`}>
-          <span className="label-line"></span>
-          <span className="label-text">Projects</span>
+        <div className="section-label">
+          <span className="label-line projects-label-line"></span>
+          <span className="label-text projects-label-text">Projects</span>
         </div>
 
-        <h2
-          className={`section-title reveal ${inView ? 'is-visible' : ''}`}
-          id="projects-title"
-        >
+        <h2 className="section-title" id="projects-title">
           Selected Work
         </h2>
 
         {/* Filter Tabs */}
-        <div
-          className={`filter-tabs reveal delay-1 ${inView ? 'is-visible' : ''}`}
-          id="filter-tabs"
-        >
+        <div className="filter-tabs" id="filter-tabs">
           {FILTER_CATEGORIES.map((tab) => {
             const count =
               tab.id === 'all'
@@ -71,7 +216,8 @@ export default function Projects() {
         {/* Featured Project */}
         {showFeatured && (
           <div
-            className={`featured-project reveal delay-2 ${inView ? 'is-visible' : ''}`}
+            ref={featuredRef}
+            className="featured-project"
             id="featured-project"
             data-category={FEATURED_PROJECT.category}
           >
@@ -125,13 +271,12 @@ export default function Projects() {
         )}
 
         {/* Projects Grid */}
-        <div className="projects-grid" id="projects-grid">
-          {filteredProjects.map((project, index) => {
-            const delayClass = `delay-${(index % 6) + 1}`;
+        <div className="projects-grid" id="projects-grid" ref={gridRef}>
+          {filteredProjects.map((project) => {
             return (
               <article
                 key={project.id}
-                className={`project-card reveal ${delayClass} ${inView ? 'is-visible' : ''}`}
+                className="project-card"
                 data-category={project.category}
                 id={project.id}
                 onMouseMove={handleMouseMove}

@@ -1,10 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Menu, X, ExternalLink } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('hero');
+  const progressBarRef = useRef(null);
+  const navRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -13,7 +20,48 @@ export default function Navbar() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    const ctx = gsap.context(() => {
+      // 1. Reading scroll progress bar scrub
+      if (progressBarRef.current) {
+        gsap.to(progressBarRef.current, {
+          scaleX: 1,
+          ease: 'none',
+          scrollTrigger: {
+            start: 'top top',
+            end: 'max',
+            scrub: 0.15
+          }
+        });
+      }
+
+      // 2. Active section detection on scroll
+      const sections = [
+        { id: 'hero', selector: '#hero' },
+        { id: 'about', selector: '#about' },
+        { id: 'skills', selector: '#skills' },
+        { id: 'projects', selector: '#projects' },
+        { id: 'contact', selector: '#contact' }
+      ];
+
+      sections.forEach(({ id, selector }) => {
+        const el = document.querySelector(selector);
+        if (el) {
+          ScrollTrigger.create({
+            trigger: el,
+            start: 'top 35%',
+            end: 'bottom 35%',
+            onEnter: () => setActiveSection(id),
+            onEnterBack: () => setActiveSection(id)
+          });
+        }
+      });
+    }, navRef);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      ctx.revert();
+    };
   }, []);
 
   const scrollToSection = (e, id) => {
@@ -32,7 +80,9 @@ export default function Navbar() {
   };
 
   return (
-    <nav id="navbar" className={scrolled ? 'scrolled' : ''}>
+    <nav id="navbar" ref={navRef} className={scrolled ? 'scrolled' : ''}>
+      <div className="nav-progress-bar" ref={progressBarRef} aria-hidden="true"></div>
+
       <div className="nav-inner">
         <a
           href="#hero"
@@ -50,6 +100,7 @@ export default function Navbar() {
             <a
               href="#about"
               id="nav-about"
+              className={activeSection === 'about' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#about')}
             >
               About
@@ -59,6 +110,7 @@ export default function Navbar() {
             <a
               href="#skills"
               id="nav-skills"
+              className={activeSection === 'skills' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#skills')}
             >
               Skills
@@ -68,6 +120,7 @@ export default function Navbar() {
             <a
               href="#projects"
               id="nav-projects"
+              className={activeSection === 'projects' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#projects')}
             >
               Projects
@@ -77,6 +130,7 @@ export default function Navbar() {
             <a
               href="#contact"
               id="nav-contact"
+              className={activeSection === 'contact' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#contact')}
             >
               Contact
@@ -110,16 +164,32 @@ export default function Navbar() {
 
       {/* Mobile Drawer */}
       <div className={`mobile-menu ${mobileOpen ? 'open' : ''}`}>
-        <a href="#about" onClick={(e) => scrollToSection(e, '#about')}>
+        <a
+          href="#about"
+          className={activeSection === 'about' ? 'active' : ''}
+          onClick={(e) => scrollToSection(e, '#about')}
+        >
           About
         </a>
-        <a href="#skills" onClick={(e) => scrollToSection(e, '#skills')}>
+        <a
+          href="#skills"
+          className={activeSection === 'skills' ? 'active' : ''}
+          onClick={(e) => scrollToSection(e, '#skills')}
+        >
           Skills
         </a>
-        <a href="#projects" onClick={(e) => scrollToSection(e, '#projects')}>
+        <a
+          href="#projects"
+          className={activeSection === 'projects' ? 'active' : ''}
+          onClick={(e) => scrollToSection(e, '#projects')}
+        >
           Projects
         </a>
-        <a href="#contact" onClick={(e) => scrollToSection(e, '#contact')}>
+        <a
+          href="#contact"
+          className={activeSection === 'contact' ? 'active' : ''}
+          onClick={(e) => scrollToSection(e, '#contact')}
+        >
           Contact
         </a>
       </div>

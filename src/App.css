@@ -90,12 +90,28 @@
   transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links a.active {
   color: var(--white);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
   width: 100%;
+}
+
+.nav-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: linear-gradient(90deg, #2a7fff 0%, #00d2ff 50%, #863bff 100%);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+  z-index: 101;
+  pointer-events: none;
 }
 
 .nav-actions {

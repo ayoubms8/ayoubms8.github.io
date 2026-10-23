@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Hero() {
   const heroRef = useRef(null);
   const bgImgRef = useRef(null);
+  const contentRef = useRef(null);
   const tagRef = useRef(null);
   const line1Ref = useRef(null);
   const line2Ref = useRef(null);
@@ -19,8 +20,8 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Entrance sequence
-      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.2 });
+      // 1. Initial entrance sequence
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' }, delay: 0.15 });
 
       tl.fromTo(
         tagRef.current,
@@ -31,7 +32,7 @@ export default function Hero() {
           line1Ref.current,
           { opacity: 0, y: 50 },
           { opacity: 1, y: 0, duration: 0.8 },
-          '-=0.4'
+          '-=0.45'
         )
         .fromTo(
           line2Ref.current,
@@ -43,13 +44,13 @@ export default function Hero() {
           subRef.current,
           { opacity: 0, y: 25 },
           { opacity: 1, y: 0, duration: 0.7 },
-          '-=0.4'
+          '-=0.45'
         )
         .fromTo(
           ctaRef.current,
           { opacity: 0, y: 20 },
           { opacity: 1, y: 0, duration: 0.6 },
-          '-=0.3'
+          '-=0.35'
         )
         .fromTo(
           scrollRef.current,
@@ -58,15 +59,45 @@ export default function Hero() {
           '-=0.2'
         );
 
-      // Parallax scroll on hero background
+      // 2. Parallax scroll on hero background
       if (bgImgRef.current && heroRef.current) {
         gsap.to(bgImgRef.current, {
-          yPercent: 20,
+          yPercent: 25,
           ease: 'none',
           scrollTrigger: {
             trigger: heroRef.current,
             start: 'top top',
             end: 'bottom top',
+            scrub: 0.5
+          }
+        });
+      }
+
+      // 3. Smooth fade-out & lift for hero text as user scrolls down
+      if (contentRef.current && heroRef.current) {
+        gsap.to(contentRef.current, {
+          yPercent: -18,
+          opacity: 0,
+          ease: 'power1.in',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: '80% top',
+            scrub: 0.8
+          }
+        });
+      }
+
+      // 4. Scroll indicator dissolves quickly on first scroll
+      if (scrollRef.current && heroRef.current) {
+        gsap.to(scrollRef.current, {
+          opacity: 0,
+          y: 20,
+          ease: 'power1.out',
+          scrollTrigger: {
+            trigger: heroRef.current,
+            start: 'top top',
+            end: '180px top',
             scrub: true
           }
         });
@@ -105,7 +136,7 @@ export default function Hero() {
 
       <CanvasOverlay />
 
-      <div className="hero-content" id="hero-content">
+      <div ref={contentRef} className="hero-content" id="hero-content">
         <div ref={tagRef} className="hero-tag" id="hero-tag">
           <span className="hero-tag-pulse"></span>
           <span>{PERSONAL_INFO.tagline}</span>

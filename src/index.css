@@ -141,6 +141,7 @@ section {
   width: 40px;
   height: 2px;
   background: linear-gradient(90deg, var(--blue-bright), transparent);
+  transform-origin: left center;
 }
 
 .label-text {

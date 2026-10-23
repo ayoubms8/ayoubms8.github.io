@@ -10,26 +10,25 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Contact({ onShowToast }) {
   const [copied, setCopied] = useState(false);
   const sectionRef = useRef(null);
-  const wrapRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // 1. Ambient parallax on decorative hexagons
+      // 1. Subtle parallax on background decorative rings
       gsap.to('.contact-hex-1', {
-        y: -35,
-        rotation: 40,
+        y: -30,
+        rotation: 30,
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: 1.6
+          scrub: 1.5
         }
       });
 
       gsap.to('.contact-hex-2', {
-        y: 30,
-        rotation: -45,
+        y: 25,
+        rotation: -35,
         ease: 'none',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -43,50 +42,38 @@ export default function Contact({ onShowToast }) {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: 'top 78%',
+          start: 'top 80%',
           once: true
         }
       });
 
       tl.fromTo(
-        wrapRef.current,
-        { opacity: 0, y: 45, scale: 0.96 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.85, ease: 'power3.out' }
+        '.contact-label-line',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.6, ease: 'power3.out' }
       )
         .fromTo(
-          '.contact-label-line',
-          { scaleX: 0 },
-          { scaleX: 1, duration: 0.6, ease: 'power3.out' },
-          '-=0.5'
-        )
-        .fromTo(
           '.contact-label-text',
-          { opacity: 0, x: -15 },
+          { opacity: 0, x: -12 },
           { opacity: 1, x: 0, duration: 0.45, ease: 'power2.out' },
           '-=0.35'
         )
         .fromTo(
           '#contact-title',
-          { opacity: 0, y: 25 },
-          { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' },
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
           '-=0.25'
         )
         .fromTo(
-          '.contact-desc',
+          '#contact-sub',
           { opacity: 0, y: 15 },
           { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' },
           '-=0.3'
         )
         .fromTo(
-          '.contact-actions > *',
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out' },
-          '-=0.2'
-        )
-        .fromTo(
-          '.contact-status',
-          { opacity: 0, scale: 0.9 },
-          { opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.4)' },
+          '.contact-item',
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.55, stagger: 0.08, ease: 'power3.out' },
           '-=0.2'
         );
     }, sectionRef);
@@ -131,8 +118,8 @@ export default function Contact({ onShowToast }) {
   return (
     <section id="contact" ref={sectionRef}>
       <div className="section-inner">
-        <div className="contact-wrap" id="contact-wrap" ref={wrapRef}>
-          <div className="contact-geo">
+        <div className="contact-wrap" id="contact-wrap">
+          <div className="contact-geo" aria-hidden="true">
             <div className="contact-hex-1"></div>
             <div className="contact-hex-2"></div>
           </div>
@@ -143,66 +130,37 @@ export default function Contact({ onShowToast }) {
           </div>
 
           <h2 className="section-title" id="contact-title">
-            Let's Build Something
+            Let's build something.
           </h2>
 
-          <p className="contact-desc">
-            Have a challenging systems problem, infrastructure architecture, or
-            distributed system to build? Let's connect.
+          <p className="contact-sub" id="contact-sub">
+            Available for opportunities, collaborations, and deep conversations
+            about systems architecture, kernels, and infrastructure.
           </p>
 
-          <div className="contact-status" id="contact-status">
-            <span className="status-dot"></span>
-            <span>{PERSONAL_INFO.status}</span>
-          </div>
-
-          <div className="contact-actions">
-            {/* Copy Email Box */}
-            <div
-              className="email-box"
-              id="copy-email-box"
-              onClick={handleCopyEmail}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleCopyEmail(e);
-                }
-              }}
-              aria-label="Copy email address"
+          <div className="contact-links" id="contact-links">
+            {/* Email with copy button */}
+            <a
+              href={`mailto:${PERSONAL_INFO.email}`}
+              className="contact-item"
+              id="contact-email"
+              title="Click to send email or use copy button"
             >
-              <div className="email-icon">
-                <Mail size={18} />
+              <div className="contact-item-left">
+                <span className="contact-icon">
+                  <Mail size={18} />
+                </span>
+                <span>{PERSONAL_INFO.email}</span>
               </div>
-              <span className="email-text" id="email-text">
-                {PERSONAL_INFO.email}
-              </span>
               <button
                 type="button"
-                className="copy-btn"
-                id="copy-email-btn"
+                className="contact-copy-btn"
+                onClick={handleCopyEmail}
                 aria-label="Copy email address"
+                title="Copy to clipboard"
               >
-                {copied ? <Check size={16} /> : <Copy size={16} />}
+                {copied ? <Check size={16} color="#4da3ff" /> : <Copy size={16} />}
               </button>
-            </div>
-
-            {/* Technical Blog */}
-            <a
-              href={PERSONAL_INFO.blogUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-card-link"
-              id="contact-blog-link"
-            >
-              <div className="contact-card-icon">
-                <BookOpen size={18} />
-              </div>
-              <div className="contact-card-info">
-                <span>Technical Blog</span>
-                <span className="card-sub">{PERSONAL_INFO.name}'s Blog</span>
-              </div>
-              <ExternalLink size={16} className="contact-card-arrow" />
             </a>
 
             {/* GitHub */}
@@ -210,17 +168,16 @@ export default function Contact({ onShowToast }) {
               href={PERSONAL_INFO.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="contact-card-link"
-              id="contact-github-link"
+              className="contact-item"
+              id="contact-github"
             >
-              <div className="contact-card-icon">
-                <GithubIcon size={18} />
+              <div className="contact-item-left">
+                <span className="contact-icon">
+                  <GithubIcon size={18} />
+                </span>
+                <span>github.com/ayoubms8</span>
               </div>
-              <div className="contact-card-info">
-                <span>GitHub</span>
-                <span className="card-sub">@ayoubms8</span>
-              </div>
-              <ExternalLink size={16} className="contact-card-arrow" />
+              <ExternalLink size={14} opacity={0.5} />
             </a>
 
             {/* LinkedIn */}
@@ -228,17 +185,33 @@ export default function Contact({ onShowToast }) {
               href={PERSONAL_INFO.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="contact-card-link"
-              id="contact-linkedin-link"
+              className="contact-item"
+              id="contact-linkedin"
             >
-              <div className="contact-card-icon">
-                <LinkedinIcon size={18} />
-              </div>
-              <div className="contact-card-info">
+              <div className="contact-item-left">
+                <span className="contact-icon">
+                  <LinkedinIcon size={18} />
+                </span>
                 <span>LinkedIn</span>
-                <span className="card-sub">Ayoub Lemsafi</span>
               </div>
-              <ExternalLink size={16} className="contact-card-arrow" />
+              <ExternalLink size={14} opacity={0.5} />
+            </a>
+
+            {/* Technical Blog */}
+            <a
+              href={PERSONAL_INFO.blogUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-item"
+              id="contact-blog-link"
+            >
+              <div className="contact-item-left">
+                <span className="contact-icon">
+                  <BookOpen size={18} />
+                </span>
+                <span>Technical Blog</span>
+              </div>
+              <ExternalLink size={14} opacity={0.5} />
             </a>
           </div>
         </div>

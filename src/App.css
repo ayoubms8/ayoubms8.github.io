@@ -997,13 +997,13 @@
 .contact-wrap {
   position: relative;
   z-index: 2;
-  max-width: 760px;
+  max-width: 820px;
 }
 
 .contact-geo {
   position: absolute;
   top: 50%;
-  right: -120px;
+  right: -100px;
   transform: translateY(-50%);
   pointer-events: none;
 }
@@ -1041,8 +1041,8 @@
   color: var(--white-60);
   font-size: 1.1rem;
   line-height: 1.8;
-  margin-bottom: 56px;
-  max-width: 580px;
+  margin-bottom: 48px;
+  max-width: 640px;
 }
 
 .contact-links {
@@ -1092,7 +1092,7 @@
 
 .contact-copy-btn {
   color: var(--white-30);
-  transition: color 0.2s;
+  transition: color 0.2s, transform 0.2s;
   padding: 4px;
   display: flex;
   align-items: center;
@@ -1101,6 +1101,8 @@
 .contact-item:hover .contact-copy-btn {
   color: var(--blue-bright);
 }
+
+
 
 /* ═══════════════════════════════════════════════
    FOOTER
@@ -1201,3 +1203,5 @@
     gap: 32px;
   }
 }
+
+

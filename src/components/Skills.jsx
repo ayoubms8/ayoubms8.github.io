@@ -76,31 +76,35 @@ export default function Skills() {
           '-=0.3'
         );
 
-      // 2. Subtle Parallax Column Differential on Scroll Scrub
+      // 2. Subtle Parallax Column Differential on Scroll Scrub (multi-column only)
       if (gridRef.current) {
-        gsap.to('.skills-grid > div:nth-child(even)', {
-          y: -18,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2
-          }
-        });
+        const mm = gsap.matchMedia();
+        mm.add('(min-width: 769px)', () => {
+          gsap.to('.skills-grid > div:nth-child(even)', {
+            y: -18,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2
+            }
+          });
 
-        gsap.to('.skills-grid > div:nth-child(odd)', {
-          y: 18,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: gridRef.current,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 1.2
-          }
+          gsap.to('.skills-grid > div:nth-child(odd)', {
+            y: 18,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: gridRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1.2
+            }
+          });
         });
       }
     }, sectionRef);
+
 
     return () => ctx.revert();
   }, []);

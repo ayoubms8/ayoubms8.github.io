@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -12,13 +12,19 @@ import './App.css';
 
 export default function App() {
   const [toastMessage, setToastMessage] = useState(null);
+  const toastTimerRef = useRef(null);
 
   const showToast = (message) => {
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
     setToastMessage(message);
-    setTimeout(() => {
+    toastTimerRef.current = setTimeout(() => {
       setToastMessage(null);
+      toastTimerRef.current = null;
     }, 2800);
   };
+
 
   return (
     <div className="app-container">

@@ -71,7 +71,7 @@ export default function Navbar() {
     if (!target) return;
     const navOffset = 70;
     const elementPosition = target.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+    const offsetPosition = elementPosition + window.scrollY - navOffset;
 
     window.scrollTo({
       top: offsetPosition,
@@ -156,6 +156,7 @@ export default function Navbar() {
             id="mobile-nav-toggle"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
@@ -191,6 +192,16 @@ export default function Navbar() {
           onClick={(e) => scrollToSection(e, '#contact')}
         >
           Contact
+        </a>
+        <a
+          href={PERSONAL_INFO.blogUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mobile-blog-link"
+          onClick={() => setMobileOpen(false)}
+        >
+          <span>Blog</span>
+          <ExternalLink size={14} />
         </a>
       </div>
     </nav>

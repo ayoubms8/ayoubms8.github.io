@@ -200,7 +200,15 @@
   .mobile-menu a:hover {
     color: var(--blue-bright);
   }
+  .mobile-menu a.mobile-blog-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--blue-bright);
+    border-bottom: none;
+  }
 }
+
 
 /* ═══════════════════════════════════════════════
    HERO SECTION
@@ -1073,6 +1081,17 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.contact-item-email .contact-item-left {
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+.contact-item-email:hover .contact-item-left {
+  color: var(--white);
+}
+
 
 .contact-icon {
   color: var(--blue-bright);

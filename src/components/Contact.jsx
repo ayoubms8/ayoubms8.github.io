@@ -107,7 +107,7 @@ export default function Contact({ onShowToast }) {
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-          } catch (_) {}
+          } catch {}
           triggerSuccess();
         });
     } else {
@@ -140,18 +140,20 @@ export default function Contact({ onShowToast }) {
 
           <div className="contact-links" id="contact-links">
             {/* Email with copy button */}
-            <a
-              href={`mailto:${PERSONAL_INFO.email}`}
-              className="contact-item"
+            <div
+              className="contact-item contact-item-email"
               id="contact-email"
-              title="Click to send email or use copy button"
             >
-              <div className="contact-item-left">
+              <a
+                href={`mailto:${PERSONAL_INFO.email}`}
+                className="contact-item-left"
+                title="Send email to Ayoub Lemsafi"
+              >
                 <span className="contact-icon">
                   <Mail size={18} />
                 </span>
                 <span>{PERSONAL_INFO.email}</span>
-              </div>
+              </a>
               <button
                 type="button"
                 className="contact-copy-btn"
@@ -161,7 +163,8 @@ export default function Contact({ onShowToast }) {
               >
                 {copied ? <Check size={16} color="#4da3ff" /> : <Copy size={16} />}
               </button>
-            </a>
+            </div>
+
 
             {/* GitHub */}
             <a

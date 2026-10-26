@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowDown, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import CanvasOverlay from './CanvasOverlay';
 import { PERSONAL_INFO } from '../data/portfolioData';
+
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -113,7 +114,7 @@ export default function Hero() {
     if (!target) return;
     const navOffset = 70;
     const elementPosition = target.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - navOffset;
+    const offsetPosition = elementPosition + window.scrollY - navOffset;
 
     window.scrollTo({
       top: offsetPosition,
@@ -183,6 +184,11 @@ export default function Hero() {
         className="hero-scroll-indicator"
         id="hero-scroll"
         onClick={(e) => scrollToSection(e, '#about')}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            scrollToSection(e, '#about');
+          }
+        }}
         role="button"
         tabIndex={0}
         aria-label="Scroll to About section"
@@ -193,3 +199,4 @@ export default function Hero() {
     </section>
   );
 }
+

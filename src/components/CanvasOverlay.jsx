@@ -169,6 +169,15 @@ export default function CanvasOverlay() {
       ctx.restore();
     };
 
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      drawCrossLines();
+      drawCornerGeo();
+      return () => {
+        window.removeEventListener('resize', resize);
+      };
+    }
+
     // Observer to pause canvas rendering when offscreen
     const observer = new IntersectionObserver(
       (entries) => {
@@ -181,6 +190,7 @@ export default function CanvasOverlay() {
     const render = () => {
       animId = requestAnimationFrame(render);
       if (!isVisible) return;
+
 
       ctx.clearRect(0, 0, W, H);
       drawCrossLines();

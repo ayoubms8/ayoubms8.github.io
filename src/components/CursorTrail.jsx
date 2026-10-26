@@ -6,8 +6,14 @@ export default function CursorTrail() {
   const containerRef = useRef(null);
 
   useEffect(() => {
-    // Only enable for mouse/trackpad pointer devices, avoid touch screens
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    // Only enable for mouse/trackpad pointer devices, avoid touch screens and users requesting reduced motion
+    if (
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      return;
+    }
+
 
     let mouseX = -100;
     let mouseY = -100;

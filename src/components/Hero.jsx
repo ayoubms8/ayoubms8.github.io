@@ -3,12 +3,15 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ExternalLink } from 'lucide-react';
 import CanvasOverlay from './CanvasOverlay';
-import { PERSONAL_INFO } from '../data/portfolioData';
-
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
+  const { lang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { personalInfo, ui } = content;
   const heroRef = useRef(null);
   const bgImgRef = useRef(null);
   const contentRef = useRef(null);
@@ -144,7 +147,7 @@ export default function Hero() {
       <div ref={contentRef} className="hero-content" id="hero-content">
         <div ref={tagRef} className="hero-tag" id="hero-tag">
           <span className="hero-tag-pulse"></span>
-          <span>{PERSONAL_INFO.tagline}</span>
+          <span>{personalInfo.tagline}</span>
         </div>
 
         <h1 className="hero-name" id="hero-name">
@@ -157,8 +160,8 @@ export default function Hero() {
         </h1>
 
         <p ref={subRef} className="hero-sub" id="hero-sub">
-          {PERSONAL_INFO.roles.join('. ')}.<br />
-          <span className="metal">{PERSONAL_INFO.subtitle}</span>
+          {personalInfo.roles.join('. ')}.<br />
+          <span className="metal">{personalInfo.subtitle}</span>
         </p>
 
         <div ref={ctaRef} className="hero-cta" id="hero-cta">
@@ -168,16 +171,16 @@ export default function Hero() {
             id="cta-projects"
             onClick={(e) => scrollToSection(e, '#projects')}
           >
-            <span>View Projects</span>
+            <span>{ui.viewProjects}</span>
           </a>
           <a
-            href={PERSONAL_INFO.blogUrl}
+            href={personalInfo.blogUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary"
             id="cta-blog"
           >
-            <span>Read Blog</span>
+            <span>{ui.readBlog}</span>
             <ExternalLink size={15} />
           </a>
         </div>

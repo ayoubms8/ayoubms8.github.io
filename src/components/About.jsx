@@ -1,11 +1,16 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { PERSONAL_INFO, STATS } from '../data/portfolioData';
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
+  const { lang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { personalInfo, ui, stats, nav } = content;
+
   const sectionRef = useRef(null);
   const geoBoxRef = useRef(null);
   const statsRef = useRef(null);
@@ -54,13 +59,13 @@ export default function About() {
         );
 
       // 2. Animated Stats Counter (triggered exactly when in view)
-      const countProxy = STATS.map(() => ({ val: 0 }));
+      const countProxy = stats.map(() => ({ val: 0 }));
       ScrollTrigger.create({
         trigger: statsRef.current,
         start: 'top 85%',
         once: true,
         onEnter: () => {
-          STATS.forEach((stat, i) => {
+          stats.forEach((stat, i) => {
             gsap.to(countProxy[i], {
               val: stat.target,
               duration: 1.5,
@@ -131,28 +136,28 @@ export default function About() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [stats]);
 
   return (
     <section id="about" ref={sectionRef}>
       <div className="section-inner">
         <div className="section-label">
           <span className="label-line about-label-line"></span>
-          <span className="label-text about-label-text">About</span>
+          <span className="label-text about-label-text">{nav.about}</span>
         </div>
 
         <div className="about-grid">
           <div className="about-text" id="about-text">
             <h2 className="section-title" id="about-title">
-              Engineering at every layer of the stack
+              {ui.aboutTitle}
             </h2>
 
-            {PERSONAL_INFO.bio.map((paragraph, idx) => (
+            {personalInfo.bio.map((paragraph, idx) => (
               <p key={idx}>{paragraph}</p>
             ))}
 
             <div className="about-stats" ref={statsRef}>
-              {STATS.map((stat, idx) => (
+              {stats.map((stat, idx) => (
                 <div key={stat.id} className="stat" id={stat.id}>
                   <span
                     className="stat-num"
@@ -168,7 +173,7 @@ export default function About() {
             <div className="about-credentials">
               <div className="credential-pill">
                 <span className="credential-dot"></span>
-                <span>{PERSONAL_INFO.certification}</span>
+                <span>{personalInfo.certification}</span>
               </div>
               <div className="credential-pill">
                 <span className="credential-dot"></span>
@@ -186,7 +191,9 @@ export default function About() {
 
               <div className="about-badge">
                 <span className="badge-icon">⬡</span>
-                <span className="badge-text">42 Paris · Software Engineering</span>
+                <span className="badge-text">
+                  {lang === 'fr' ? '42 Paris · Génie Logiciel' : '42 Paris · Software Engineering'}
+                </span>
               </div>
             </div>
           </div>

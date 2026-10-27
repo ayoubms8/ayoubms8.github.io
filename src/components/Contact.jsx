@@ -3,11 +3,16 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Mail, BookOpen, Copy, Check, ExternalLink } from 'lucide-react';
 import { GithubIcon, LinkedinIcon } from './Icons';
-import { PERSONAL_INFO } from '../data/portfolioData';
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact({ onShowToast }) {
+  const { lang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { personalInfo, ui, nav } = content;
+
   const [copied, setCopied] = useState(false);
   const sectionRef = useRef(null);
 
@@ -88,19 +93,19 @@ export default function Contact({ onShowToast }) {
     const triggerSuccess = () => {
       setCopied(true);
       if (onShowToast) {
-        onShowToast('Email copied to clipboard!');
+        onShowToast(ui.emailCopied);
       }
       setTimeout(() => setCopied(false), 2500);
     };
 
     if (navigator?.clipboard?.writeText) {
       navigator.clipboard
-        .writeText(PERSONAL_INFO.email)
+        .writeText(personalInfo.email)
         .then(triggerSuccess)
         .catch(() => {
           try {
             const textarea = document.createElement('textarea');
-            textarea.value = PERSONAL_INFO.email;
+            textarea.value = personalInfo.email;
             textarea.style.position = 'fixed';
             textarea.style.opacity = '0';
             document.body.appendChild(textarea);
@@ -126,16 +131,15 @@ export default function Contact({ onShowToast }) {
 
           <div className="section-label">
             <span className="label-line contact-label-line"></span>
-            <span className="label-text contact-label-text">Contact</span>
+            <span className="label-text contact-label-text">{nav.contact}</span>
           </div>
 
           <h2 className="section-title" id="contact-title">
-            Let's build something.
+            {ui.contactTitle}
           </h2>
 
           <p className="contact-sub" id="contact-sub">
-            Available for opportunities, collaborations, and deep conversations
-            about systems architecture, kernels, and infrastructure.
+            {ui.contactSub}
           </p>
 
           <div className="contact-links" id="contact-links">
@@ -145,21 +149,21 @@ export default function Contact({ onShowToast }) {
               id="contact-email"
             >
               <a
-                href={`mailto:${PERSONAL_INFO.email}`}
+                href={`mailto:${personalInfo.email}`}
                 className="contact-item-left"
-                title="Send email to Ayoub Lemsafi"
+                title={`Send email to ${personalInfo.name}`}
               >
                 <span className="contact-icon">
                   <Mail size={18} />
                 </span>
-                <span>{PERSONAL_INFO.email}</span>
+                <span>{personalInfo.email}</span>
               </a>
               <button
                 type="button"
                 className="contact-copy-btn"
                 onClick={handleCopyEmail}
-                aria-label="Copy email address"
-                title="Copy to clipboard"
+                aria-label={ui.copyEmail}
+                title={ui.copyEmail}
               >
                 {copied ? <Check size={16} color="#4da3ff" /> : <Copy size={16} />}
               </button>
@@ -168,7 +172,7 @@ export default function Contact({ onShowToast }) {
 
             {/* GitHub */}
             <a
-              href={PERSONAL_INFO.githubUrl}
+              href={personalInfo.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="contact-item"
@@ -185,7 +189,7 @@ export default function Contact({ onShowToast }) {
 
             {/* LinkedIn */}
             <a
-              href={PERSONAL_INFO.linkedinUrl}
+              href={personalInfo.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="contact-item"
@@ -202,7 +206,7 @@ export default function Contact({ onShowToast }) {
 
             {/* Technical Blog */}
             <a
-              href={PERSONAL_INFO.blogUrl}
+              href={personalInfo.blogUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="contact-item"
@@ -212,7 +216,7 @@ export default function Contact({ onShowToast }) {
                 <span className="contact-icon">
                   <BookOpen size={18} />
                 </span>
-                <span>Technical Blog</span>
+                <span>{lang === 'fr' ? 'Blog Technique' : 'Technical Blog'}</span>
               </div>
               <ExternalLink size={14} opacity={0.5} />
             </a>

@@ -2,11 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ExternalLink, Terminal, Sparkles } from 'lucide-react';
-import { PROJECTS, FEATURED_PROJECT, FILTER_CATEGORIES } from '../data/portfolioData';
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
+  const { lang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { projects, featuredProject, filters, ui, nav } = content;
+
   const [activeFilter, setActiveFilter] = useState('all');
   const sectionRef = useRef(null);
   const featuredRef = useRef(null);
@@ -168,7 +173,7 @@ export default function Projects() {
 
 
   // Filtered projects
-  const filteredProjects = PROJECTS.filter((p) => {
+  const filteredProjects = projects.filter((p) => {
     if (activeFilter === 'all') return true;
     return p.category === activeFilter;
   });
@@ -180,20 +185,20 @@ export default function Projects() {
       <div className="section-inner">
         <div className="section-label">
           <span className="label-line projects-label-line"></span>
-          <span className="label-text projects-label-text">Projects</span>
+          <span className="label-text projects-label-text">{nav.projects}</span>
         </div>
 
         <h2 className="section-title" id="projects-title">
-          Selected Work
+          {ui.projectsTitle}
         </h2>
 
         {/* Filter Tabs */}
         <div className="filter-tabs" id="filter-tabs">
-          {FILTER_CATEGORIES.map((tab) => {
+          {filters.map((tab) => {
             const count =
               tab.id === 'all'
-                ? PROJECTS.length + 1
-                : PROJECTS.filter((p) => p.category === tab.id).length +
+                ? projects.length + 1
+                : projects.filter((p) => p.category === tab.id).length +
                   (tab.id === 'systems' ? 1 : 0);
 
             return (
@@ -217,12 +222,12 @@ export default function Projects() {
             ref={featuredRef}
             className="featured-project"
             id="featured-project"
-            data-category={FEATURED_PROJECT.category}
+            data-category={featuredProject.category}
           >
             <div className="feat-visual">
               <div className="feat-label-tag">
                 <Sparkles size={13} />
-                <span>Featured Series</span>
+                <span>{ui.featuredLabel}</span>
               </div>
               <div className="feat-geo-wrap">
                 <div className="feat-hex feat-hex-1"></div>
@@ -236,17 +241,17 @@ export default function Projects() {
             <div className="feat-info">
               <div className="feat-meta">
                 <span className="feat-category">
-                  {FEATURED_PROJECT.categoryLabel}
+                  {featuredProject.categoryLabel}
                 </span>
-                <span className="feat-date">{FEATURED_PROJECT.year}</span>
+                <span className="feat-date">{featuredProject.year}</span>
               </div>
 
-              <h3>{FEATURED_PROJECT.title}</h3>
+              <h3>{featuredProject.title}</h3>
 
-              <p>{FEATURED_PROJECT.description}</p>
+              <p>{featuredProject.description}</p>
 
               <ul className="feat-highlights">
-                {FEATURED_PROJECT.highlights.map((item) => (
+                {featuredProject.highlights.map((item) => (
                   <li key={item.code}>
                     <span className="highlight-num">{item.code}</span>
                     <span>{item.desc}</span>
@@ -255,13 +260,13 @@ export default function Projects() {
               </ul>
 
               <a
-                href={FEATURED_PROJECT.link}
+                href={featuredProject.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary feat-btn"
                 id="feat-btn"
               >
-                <span>Read Series</span>
+                <span>{lang === 'fr' ? 'Découvrir la série' : 'Read Series'}</span>
                 <ExternalLink size={15} />
               </a>
             </div>
@@ -304,7 +309,7 @@ export default function Projects() {
                   className="card-link"
                   id={`proj-link-${project.id}`}
                 >
-                  <span>Read more</span>
+                  <span>{ui.viewPost}</span>
                   <ExternalLink size={13} />
                 </a>
               </article>

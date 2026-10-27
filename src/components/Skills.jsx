@@ -2,7 +2,8 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Cpu, Shield, Network, Cloud, Code2, Layers } from 'lucide-react';
-import { SKILL_CATEGORIES } from '../data/portfolioData';
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,6 +17,10 @@ const ICON_MAP = {
 };
 
 export default function Skills() {
+  const { lang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { skills, ui, nav } = content;
+
   const sectionRef = useRef(null);
   const gridRef = useRef(null);
 
@@ -123,15 +128,15 @@ export default function Skills() {
       <div className="section-inner">
         <div className="section-label">
           <span className="label-line skills-label-line"></span>
-          <span className="label-text skills-label-text">Skills</span>
+          <span className="label-text skills-label-text">{nav.skills}</span>
         </div>
 
         <h2 className="section-title centered" id="skills-title">
-          Technical Arsenal
+          {ui.skillsTitle}
         </h2>
 
         <div className="skills-grid" id="skills-grid" ref={gridRef}>
-          {SKILL_CATEGORIES.map((category) => {
+          {skills.map((category) => {
             const IconComponent = ICON_MAP[category.icon] || Code2;
 
             return (

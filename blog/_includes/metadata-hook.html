@@ -1,0 +1,173 @@
+<!-- Custom metadata & Headless Translation for French/English -->
+<div id="google_translate_element" style="display:none;" aria-hidden="true"></div>
+<style>
+  /* Blog Language Switcher Styles */
+  #blog-lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-family: var(--bs-font-monospace, monospace);
+    font-size: 0.72rem;
+    line-height: 1.2;
+    transition: all 0.25s ease;
+  }
+
+  [data-mode="light"] #blog-lang-switcher {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.15);
+  }
+
+  #blog-lang-switcher:hover {
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+  }
+
+  .blog-lang-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted-color, #888);
+    padding: 1px 4px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: inherit;
+    font-size: inherit;
+    transition: all 0.2s ease;
+    line-height: 1;
+  }
+
+  .blog-lang-btn:hover {
+    color: #4da3ff;
+  }
+
+  .blog-lang-btn.active {
+    color: #00f0ff;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  }
+
+  [data-mode="light"] .blog-lang-btn.active {
+    color: #0070f3;
+    text-shadow: none;
+  }
+
+  .blog-lang-sep {
+    color: var(--text-muted-color, #666);
+    opacity: 0.5;
+    font-size: 0.65rem;
+    user-select: none;
+  }
+
+  /* Completely suppress Google Translate toolbar, banners, and tooltips */
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-banner-frame,
+  iframe.goog-te-banner-frame,
+  #goog-gt-tt,
+  .goog-te-balloon-frame {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  body {
+    top: 0px !important;
+    position: static !important;
+  }
+
+  .goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  #google_translate_element {
+    display: none !important;
+  }
+</style>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,fr',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+
+  function applyBlogLanguage(targetLang) {
+    try {
+      localStorage.setItem('site_lang', targetLang);
+    } catch (e) {}
+
+    const cookieVal = targetLang === 'fr' ? '/en/fr' : '/en/en';
+    const domain = window.location.hostname;
+    document.cookie = 'googtrans=' + cookieVal + '; path=/;';
+    if (domain) {
+      document.cookie = 'googtrans=' + cookieVal + '; path=/; domain=' + domain + ';';
+    }
+
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = targetLang;
+      select.dispatchEvent(new Event('change'));
+      updateBlogLangUi(targetLang);
+    } else {
+      window.location.reload();
+    }
+  }
+
+  function updateBlogLangUi(currentLang) {
+    const btnEn = document.getElementById('blog-btn-en');
+    const btnFr = document.getElementById('blog-btn-fr');
+    if (btnEn && btnFr) {
+      if (currentLang === 'fr') {
+        btnFr.classList.add('active');
+        btnEn.classList.remove('active');
+      } else {
+        btnEn.classList.add('active');
+        btnFr.classList.remove('active');
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    let activeLang = 'en';
+    try {
+      activeLang = localStorage.getItem('site_lang') || 'en';
+    } catch (e) {}
+
+    if (document.cookie.indexOf('googtrans=/en/fr') !== -1) {
+      activeLang = 'fr';
+    }
+
+    updateBlogLangUi(activeLang);
+
+    const btnEn = document.getElementById('blog-btn-en');
+    const btnFr = document.getElementById('blog-btn-fr');
+
+    if (btnEn) {
+      btnEn.addEventListener('click', function (e) {
+        e.preventDefault();
+        applyBlogLanguage('en');
+      });
+    }
+
+    if (btnFr) {
+      btnFr.addEventListener('click', function (e) {
+        e.preventDefault();
+        applyBlogLanguage('fr');
+      });
+    }
+
+    // Auto-prime translation cookie if French is preferred
+    if (activeLang === 'fr' && document.cookie.indexOf('googtrans=/en/fr') === -1) {
+      document.cookie = 'googtrans=/en/fr; path=/;';
+      const domain = window.location.hostname;
+      if (domain) {
+        document.cookie = 'googtrans=/en/fr; path=/; domain=' + domain + ';';
+      }
+    }
+  });
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>

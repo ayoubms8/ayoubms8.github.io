@@ -2,11 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Menu, X, ExternalLink } from 'lucide-react';
-import { PERSONAL_INFO } from '../data/portfolioData';
+import { PORTFOLIO_CONTENT } from '../data/portfolioData';
+import { useLanguage } from '../hooks/useLanguage';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Navbar() {
+  const { lang, setLang } = useLanguage();
+  const content = PORTFOLIO_CONTENT[lang] || PORTFOLIO_CONTENT.en;
+  const { nav: navText, personalInfo } = content;
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
@@ -103,7 +108,7 @@ export default function Navbar() {
               className={activeSection === 'about' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#about')}
             >
-              About
+              {navText.about}
             </a>
           </li>
           <li>
@@ -113,7 +118,7 @@ export default function Navbar() {
               className={activeSection === 'skills' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#skills')}
             >
-              Skills
+              {navText.skills}
             </a>
           </li>
           <li>
@@ -123,7 +128,7 @@ export default function Navbar() {
               className={activeSection === 'projects' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#projects')}
             >
-              Projects
+              {navText.projects}
             </a>
           </li>
           <li>
@@ -133,20 +138,42 @@ export default function Navbar() {
               className={activeSection === 'contact' ? 'active' : ''}
               onClick={(e) => scrollToSection(e, '#contact')}
             >
-              Contact
+              {navText.contact}
             </a>
           </li>
         </ul>
 
         <div className="nav-actions">
+          <div className="nav-lang-toggle" role="group" aria-label="Language selection">
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+              onClick={() => setLang('en')}
+              aria-pressed={lang === 'en'}
+              aria-label="English"
+            >
+              EN
+            </button>
+            <span className="lang-sep">/</span>
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'fr' ? 'active' : ''}`}
+              onClick={() => setLang('fr')}
+              aria-pressed={lang === 'fr'}
+              aria-label="Français"
+            >
+              FR
+            </button>
+          </div>
+
           <a
-            href={PERSONAL_INFO.blogUrl}
+            href={personalInfo.blogUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="nav-blog-btn"
             id="nav-blog-btn"
           >
-            <span>Blog</span>
+            <span>{navText.blog}</span>
             <ExternalLink size={14} />
           </a>
 
@@ -170,39 +197,68 @@ export default function Navbar() {
           className={activeSection === 'about' ? 'active' : ''}
           onClick={(e) => scrollToSection(e, '#about')}
         >
-          About
+          {navText.about}
         </a>
         <a
           href="#skills"
           className={activeSection === 'skills' ? 'active' : ''}
           onClick={(e) => scrollToSection(e, '#skills')}
         >
-          Skills
+          {navText.skills}
         </a>
         <a
           href="#projects"
           className={activeSection === 'projects' ? 'active' : ''}
           onClick={(e) => scrollToSection(e, '#projects')}
         >
-          Projects
+          {navText.projects}
         </a>
         <a
           href="#contact"
           className={activeSection === 'contact' ? 'active' : ''}
           onClick={(e) => scrollToSection(e, '#contact')}
         >
-          Contact
+          {navText.contact}
         </a>
-        <a
-          href={PERSONAL_INFO.blogUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mobile-blog-link"
-          onClick={() => setMobileOpen(false)}
-        >
-          <span>Blog</span>
-          <ExternalLink size={14} />
-        </a>
+
+        <div className="mobile-actions">
+          <div className="nav-lang-toggle" role="group" aria-label="Language selection">
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'en' ? 'active' : ''}`}
+              onClick={() => {
+                setLang('en');
+                setMobileOpen(false);
+              }}
+              aria-pressed={lang === 'en'}
+            >
+              EN
+            </button>
+            <span className="lang-sep">/</span>
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'fr' ? 'active' : ''}`}
+              onClick={() => {
+                setLang('fr');
+                setMobileOpen(false);
+              }}
+              aria-pressed={lang === 'fr'}
+            >
+              FR
+            </button>
+          </div>
+
+          <a
+            href={personalInfo.blogUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mobile-blog-btn"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span>{navText.blog}</span>
+            <ExternalLink size={14} />
+          </a>
+        </div>
       </div>
     </nav>
   );

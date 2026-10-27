@@ -164,6 +164,17 @@ export default function About() {
                 </div>
               ))}
             </div>
+
+            <div className="about-credentials">
+              <div className="credential-pill">
+                <span className="credential-dot"></span>
+                <span>{PERSONAL_INFO.certification}</span>
+              </div>
+              <div className="credential-pill">
+                <span className="credential-dot"></span>
+                <span>42 Paris &bull; EST Agadir</span>
+              </div>
+            </div>
           </div>
 
           <div className="about-visual" id="about-visual">
@@ -175,7 +186,7 @@ export default function About() {
 
               <div className="about-badge">
                 <span className="badge-icon">⬡</span>
-                <span className="badge-text">1337 / 42 Network</span>
+                <span className="badge-text">42 Paris · Software Engineering</span>
               </div>
             </div>
           </div>

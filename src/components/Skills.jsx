@@ -114,11 +114,9 @@ export default function Skills() {
     const glow = card.querySelector('.skill-card-glow');
     if (!glow) return;
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    glow.style.left = `${x}px`;
-    glow.style.top = `${y}px`;
+    glow.style.transform = `translate3d(${(e.clientX - rect.left).toFixed(1)}px, ${(e.clientY - rect.top).toFixed(1)}px, 0) translate(-50%, -50%)`;
   };
+
 
   return (
     <section id="skills" ref={sectionRef}>

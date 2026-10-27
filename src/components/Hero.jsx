@@ -131,9 +131,13 @@ export default function Hero() {
           alt="Ayoub Lemsafi Background"
           className="hero-bg-img"
           id="hero-bg-img"
+          loading="eager"
+          fetchPriority="high"
+          decoding="async"
         />
         <div className="hero-bg-overlay"></div>
       </div>
+
 
       <CanvasOverlay />
 

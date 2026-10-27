@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { PERSONAL_INFO, STATS } from '../data/portfolioData';
@@ -9,7 +9,8 @@ export default function About() {
   const sectionRef = useRef(null);
   const geoBoxRef = useRef(null);
   const statsRef = useRef(null);
-  const [counts, setCounts] = useState(STATS.map(() => 0));
+  const numRefs = useRef([]);
+
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -62,14 +63,12 @@ export default function About() {
           STATS.forEach((stat, i) => {
             gsap.to(countProxy[i], {
               val: stat.target,
-              duration: 1.6,
+              duration: 1.5,
               ease: 'power2.out',
               onUpdate: () => {
-                setCounts((prev) => {
-                  const updated = [...prev];
-                  updated[i] = Math.round(countProxy[i].val);
-                  return updated;
-                });
+                if (numRefs.current[i]) {
+                  numRefs.current[i].textContent = `${Math.round(countProxy[i].val)}${stat.suffix}`;
+                }
               }
             });
           });
@@ -155,9 +154,11 @@ export default function About() {
             <div className="about-stats" ref={statsRef}>
               {STATS.map((stat, idx) => (
                 <div key={stat.id} className="stat" id={stat.id}>
-                  <span className="stat-num">
-                    {counts[idx]}
-                    {stat.suffix}
+                  <span
+                    className="stat-num"
+                    ref={(el) => (numRefs.current[idx] = el)}
+                  >
+                    0{stat.suffix}
                   </span>
                   <span className="stat-label">{stat.label}</span>
                 </div>

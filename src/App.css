@@ -574,14 +574,17 @@
 
 .skill-card-glow {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 220px;
   height: 220px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(42, 127, 255, 0.22) 0%, transparent 70%);
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.4s ease;
+  transform: translate3d(-200px, -200px, 0) translate(-50%, -50%);
+  will-change: transform;
+  transition: opacity 0.3s ease;
 }
 
 .skill-card:hover .skill-card-glow {
@@ -901,14 +904,17 @@
 
 .card-glow {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 200px;
   height: 200px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(42, 127, 255, 0.2) 0%, transparent 70%);
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.4s ease;
+  transform: translate3d(-200px, -200px, 0) translate(-50%, -50%);
+  will-change: transform;
+  transition: opacity 0.3s ease;
 }
 
 .project-card:hover .card-glow {

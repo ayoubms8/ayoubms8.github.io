@@ -321,7 +321,7 @@ export const PORTFOLIO_CONTENT = {
         "De la conception d'applications web distribuées complètes (Django, Laravel, React.js, Three.js) à l'orchestration de clusters Kubernetes multi-machines et la création de noyaux x86 en C et assembleur, je conçois des systèmes performants et pérennes.",
         "1ère place au Hackathon Phos4code Generative AI (Groupe OCP & 1337) et certifié Oracle OCI Generative AI Professional."
       ],
-      blogUrl: 'https://ayoubms8.github.io/blog',
+      blogUrl: 'https://ayoubms8.github.io/blog/fr',
       githubUrl: 'https://github.com/ayoubms8',
       linkedinUrl: 'https://www.linkedin.com/in/ayoubms8',
       email: 'ayoub.lemsafi10@gmail.com',
@@ -451,7 +451,7 @@ export const PORTFOLIO_CONTENT = {
         { code: 'KFS-3', desc: 'Gestionnaire de mémoire physique (bitmap PMM), pagination virtuelle à 2 niveaux, allocateur heap kmalloc/kfree' },
         { code: 'KFS-4', desc: 'Table des descripteurs d’interruptions (IDT), remappage double PIC 8259, timer PIT, pilote clavier PS/2' }
       ],
-      link: 'https://ayoubms8.github.io/blog/posts/KFS-4/',
+      link: 'https://ayoubms8.github.io/blog/fr/posts/KFS-4/',
       tags: ['Kernel', 'Assembleur x86', 'C', 'Pagination', 'IDT', 'Bootloader']
     },
     projects: [
@@ -464,7 +464,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           "Équipe gagnante au Hackathon Phos4code Generative AI (Groupe OCP & 1337). Conception d'un jumeau numérique d'une usine d'acide sulfurique basé sur la télémétrie industrielle en temps réel pour optimiser la production énergétique tout en maintenant la stabilité du procédé, avec un chatbot IA d'assistance.",
         tags: ['FastAPI', 'React.js', 'Python', 'scikit-learn', 'NLP', 'LLMs Locaux'],
-        link: 'https://ayoubms8.github.io/blog/posts/Topiary-AI-Industrial-Digital-Twin/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Topiary-AI-Industrial-Digital-Twin/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -476,7 +476,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Plateforme web multijoueur complète en temps réel avec Pong 3D animé avec Three.js, gestion de tournois, messagerie instantanée, succès et modes de jeu variés. Architecture microservices moderne avec Django, React.js et intégration blockchain.',
         tags: ['Django', 'React.js', 'Three.js', 'Microservices', 'WebSockets', 'Blockchain'],
-        link: 'https://ayoubms8.github.io/blog/posts/ft_Transcendence/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/ft_Transcendence/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -488,7 +488,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Infrastructure cloud orchestrée sur clusters Kubernetes multi-machines (K3s/K3d) provisionnés avec Vagrant et Ansible. Déploiements GitOps automatisés via ArgoCD et Helm, associés à une infrastructure AWS codifiée avec Terraform.',
         tags: ['Kubernetes', 'Helm', 'Ansible', 'ArgoCD', 'Terraform', 'AWS', 'GitOps'],
-        link: 'https://ayoubms8.github.io/blog/posts/Inception_Of_Things/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Inception_Of_Things/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -524,7 +524,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Virtualisation réseau sous GNS3 implémentant des plans de contrôle BGP EVPN au-dessus de tunnels sous-jacents VXLAN. Routage inter-AS dynamique avec moteurs FRRouting.',
         tags: ['BGP', 'VXLAN', 'EVPN', 'FRRouting', 'GNS3'],
-        link: 'https://ayoubms8.github.io/blog/posts/BGP-At-Doors-Of-Autonomous-Systems/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/BGP-At-Doors-Of-Autonomous-Systems/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -536,7 +536,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           "Serveur IRC conforme RFC 1459 en C++98 avec entrées/sorties non-bloquantes multiplexées via epoll. Gestion simultanée de multiples clients, canaux, privilèges opérateurs et commandes du protocole.",
         tags: ['C++98', 'epoll', 'Sockets', 'IRC'],
-        link: 'https://ayoubms8.github.io/blog/posts/ft_IRC/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/ft_IRC/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -548,7 +548,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Moteur 3D en raycasting en langage C inspiré du classique Wolfenstein 3D. Calculs de textures en temps réel, minimap dynamique, projections trigonométriques et gestion des collisions.',
         tags: ['C', 'Raycasting', 'Graphisme', 'Moteur de Jeu'],
-        link: 'https://ayoubms8.github.io/blog/posts/Cub3d/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Cub3d/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -560,7 +560,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Interpréteur de commandes compatible Bash en langage C. Prise en charge des pipelines multi-étapes, redirections d’E/S, expansion des variables, gestion des signaux et commandes intégrées (built-ins).',
         tags: ['C', 'Shell', 'Pipes', 'Signaux', 'POSIX'],
-        link: 'https://ayoubms8.github.io/blog/posts/Minishell/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Minishell/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -572,7 +572,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Analyse binaire avancée : élaboration de chaînes ROP, attaques ret2libc, débordements de pile avec contournement ASLR. Étude approfondie des corruptions mémoire x86.',
         tags: ['ROP', 'ret2libc', 'GDB', 'Assembleur'],
-        link: 'https://ayoubms8.github.io/blog/posts/Override/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Override/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -584,7 +584,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Recherche de vulnérabilités en mémoire : buffer overflows, failles par chaînes de format et contournement des protections modernes (ASLR, canaris de pile).',
         tags: ['Buffer Overflow', 'Format String', 'C', 'Exploit'],
-        link: 'https://ayoubms8.github.io/blog/posts/Rainfall/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Rainfall/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -596,7 +596,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           "Élévation de privilèges Linux à travers l'exploitation de binaires SUID, détournement de tâches cron et mauvaises configurations système. Méthodologie rigoureuse de CTF.",
         tags: ['Linux', 'Élévation de Privilèges', 'SUID', 'CTF'],
-        link: 'https://ayoubms8.github.io/blog/posts/Snowcrash/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Snowcrash/',
         github: 'https://github.com/ayoubms8'
       },
       {
@@ -608,7 +608,7 @@ export const PORTFOLIO_CONTENT = {
         description:
           'Infrastructure multi-conteneurs sous Docker : serveur Nginx avec TLSv1.3, WordPress, base MariaDB, gestion des secrets, réseaux personnalisés et volumes persistants.',
         tags: ['Docker', 'Nginx', 'WordPress', 'MariaDB', 'TLS'],
-        link: 'https://ayoubms8.github.io/blog/posts/Inception/',
+        link: 'https://ayoubms8.github.io/blog/fr/posts/Inception/',
         github: 'https://github.com/ayoubms8'
       }
     ],

@@ -56,9 +56,15 @@ jobs:
           bundler-cache: true
           working-directory: blog
 
-      - name: Build Blog
+      - name: Build Blog (EN)
         working-directory: blog
         run: bundle exec jekyll b -d ../dist/blog
+        env:
+          JEKYLL_ENV: "production"
+
+      - name: Build Blog (FR)
+        working-directory: blog
+        run: bundle exec jekyll b --config _config.yml,_config_fr.yml -d ../dist/blog/fr
         env:
           JEKYLL_ENV: "production"
 

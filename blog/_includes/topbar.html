@@ -57,10 +57,16 @@
 
     <div class="d-flex align-items-center">
       <!-- Language Switcher Option -->
-      <div id="blog-lang-switcher" class="me-2" role="group" aria-label="Language selection">
-        <button type="button" class="blog-lang-btn active" id="blog-btn-en" aria-label="English">EN</button>
-        <span class="blog-lang-sep">/</span>
-        <button type="button" class="blog-lang-btn" id="blog-btn-fr" aria-label="Français">FR</button>
+      <div id="blog-lang-switcher" class="me-2" role="group" aria-label="Langue / Language">
+        {% if site.lang == 'fr-FR' %}
+          <a href="{{ page.url | prepend: '/blog' }}" class="blog-lang-btn" id="blog-btn-en" aria-label="English">EN</a>
+          <span class="blog-lang-sep">/</span>
+          <a href="{{ page.url | prepend: '/blog/fr' }}" class="blog-lang-btn active" id="blog-btn-fr" aria-label="Français">FR</a>
+        {% else %}
+          <a href="{{ page.url | prepend: '/blog' }}" class="blog-lang-btn active" id="blog-btn-en" aria-label="English">EN</a>
+          <span class="blog-lang-sep">/</span>
+          <a href="{{ page.url | prepend: '/blog/fr' }}" class="blog-lang-btn" id="blog-btn-fr" aria-label="Français">FR</a>
+        {% endif %}
       </div>
 
       <button type="button" id="search-trigger" class="btn btn-link" aria-label="Search">

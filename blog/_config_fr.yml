@@ -1,0 +1,12 @@
+# French configuration override for Chirpy
+# Inherits from _config.yml and overrides language & baseurl settings
+
+lang: fr-FR
+baseurl: "/blog/fr"
+
+tagline: "Blog d'un ingénieur logiciel & systèmes"
+description: "Articles et retours d'expérience sur l'architecture logicielle, les systèmes et le cloud."
+
+# Avoid PWA cache conflict between /blog and /blog/fr
+pwa:
+  enabled: false

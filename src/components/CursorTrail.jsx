@@ -41,8 +41,8 @@ export default function CursorTrail() {
         width: ${size}px;
         height: ${size}px;
         border-radius: 50%;
-        background: rgba(77, 163, 255, ${opacity});
-        box-shadow: 0 0 ${Math.max(4, size * 1.5)}px rgba(42, 127, 255, 0.6);
+        background: hsla(38, 92%, 56%, ${opacity});
+        box-shadow: 0 0 ${Math.max(4, size * 1.5)}px hsla(38, 92%, 56%, 0.55);
         will-change: transform;
         transform: translate3d(-100px, -100px, 0);
         transition: opacity 0.25s ease, box-shadow 0.2s ease;
@@ -153,7 +153,7 @@ export default function CursorTrail() {
       createClickEffect(e.clientX, e.clientY);
 
       if (trail[0]) {
-        trail[0].el.style.boxShadow = '0 0 14px #00f0ff, 0 0 22px rgba(77, 163, 255, 0.8)';
+        trail[0].el.style.boxShadow = '0 0 14px hsl(42,100%,68%), 0 0 22px hsla(38,92%,56%,0.75)';
         trail[0].el.style.transform = `translate3d(${(trail[0].x - trail[0].half).toFixed(1)}px, ${(trail[0].y - trail[0].half).toFixed(1)}px, 0) scale(1.4)`;
       }
     };
@@ -163,7 +163,7 @@ export default function CursorTrail() {
       isPointerDown = false;
 
       if (trail[0]) {
-        trail[0].el.style.boxShadow = '0 0 9px rgba(42, 127, 255, 0.6)';
+        trail[0].el.style.boxShadow = '0 0 9px hsla(38, 92%, 56%, 0.55)';
         trail[0].el.style.transform = `translate3d(${(trail[0].x - trail[0].half).toFixed(1)}px, ${(trail[0].y - trail[0].half).toFixed(1)}px, 0)`;
       }
     };

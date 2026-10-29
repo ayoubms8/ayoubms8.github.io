@@ -27,7 +27,7 @@ export default function CanvasOverlay() {
       bgCtx.clearRect(0, 0, W, H);
 
       // Diagonal cross lines
-      bgCtx.strokeStyle = 'rgba(42, 127, 255, 0.035)';
+      bgCtx.strokeStyle = 'hsla(38, 92%, 56%, 0.04)';
       bgCtx.lineWidth = 1;
       const spacing = 90;
       for (let x = -H; x < W + H; x += spacing) {
@@ -43,7 +43,7 @@ export default function CanvasOverlay() {
       }
 
       // Corner markers
-      bgCtx.strokeStyle = 'rgba(42, 127, 255, 0.12)';
+      bgCtx.strokeStyle = 'hsla(38, 92%, 56%, 0.13)';
       bgCtx.lineWidth = 1;
 
       bgCtx.beginPath();
@@ -61,7 +61,7 @@ export default function CanvasOverlay() {
       bgCtx.stroke();
 
       // Brackets
-      bgCtx.strokeStyle = 'rgba(77, 163, 255, 0.3)';
+      bgCtx.strokeStyle = 'hsla(42, 100%, 68%, 0.28)';
       bgCtx.lineWidth = 1.5;
       const s = 24;
 
@@ -124,7 +124,7 @@ export default function CanvasOverlay() {
       }
       draw() {
         const a = this.opacity * Math.sin((this.life / this.maxLife) * Math.PI);
-        ctx.fillStyle = `rgba(42, 127, 255, ${a})`;
+        ctx.fillStyle = `hsla(38, 92%, 56%, ${a})`;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -160,8 +160,8 @@ export default function CanvasOverlay() {
         const x2 = this.x1 + this.vx * this.len;
         const y2 = this.y1 + this.vy * this.len;
         const grad = ctx.createLinearGradient(this.x1, this.y1, x2, y2);
-        grad.addColorStop(0, `rgba(77, 163, 255, ${a})`);
-        grad.addColorStop(1, 'rgba(42, 127, 255, 0)');
+        grad.addColorStop(0, `hsla(42, 100%, 68%, ${a})`);
+        grad.addColorStop(1, 'hsla(38, 92%, 56%, 0)');
         ctx.strokeStyle = grad;
         ctx.lineWidth = 0.8;
         ctx.beginPath();

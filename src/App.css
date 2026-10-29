@@ -108,8 +108,8 @@
   width: 100%;
   transform-origin: left center;
   transform: scaleX(0);
-  background: linear-gradient(90deg, #2a7fff 0%, #00d2ff 50%, #863bff 100%);
-  box-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+  background: linear-gradient(90deg, hsl(32, 88%, 44%) 0%, hsl(38, 92%, 56%) 50%, hsl(42, 100%, 68%) 100%);
+  box-shadow: 0 0 10px hsla(38, 92%, 56%, 0.55);
   z-index: 101;
   pointer-events: none;
 }
@@ -165,8 +165,8 @@
 }
 
 .nav-lang-toggle:hover {
-  border-color: rgba(0, 240, 255, 0.4);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+  border-color: hsla(38, 92%, 56%, 0.45);
+  box-shadow: 0 0 12px hsla(38, 92%, 56%, 0.18);
 }
 
 .lang-btn {
@@ -187,9 +187,9 @@
 }
 
 .lang-btn.active {
-  color: var(--blue-bright);
+  color: var(--gold-bright);
   font-weight: 700;
-  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+  text-shadow: 0 0 8px hsla(42, 100%, 68%, 0.55);
 }
 
 .lang-sep {
@@ -390,8 +390,8 @@
 
 .hero-name-line.accent {
   color: transparent;
-  -webkit-text-stroke: 1.5px var(--blue-bright);
-  filter: drop-shadow(0 0 35px var(--blue-glow));
+  -webkit-text-stroke: 1.5px var(--gold-bright);
+  filter: drop-shadow(0 0 35px var(--gold-glow));
 }
 
 .hero-sub {
@@ -529,8 +529,8 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: rgba(0, 240, 255, 0.04);
-  border: 1px solid rgba(0, 240, 255, 0.16);
+  background: var(--gold-dimmer);
+  border: 1px solid var(--gold-border);
   border-radius: var(--radius-sm);
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -539,8 +539,8 @@
 }
 
 .credential-pill:hover {
-  border-color: rgba(0, 240, 255, 0.4);
-  background: rgba(0, 240, 255, 0.08);
+  border-color: var(--gold-border-hover);
+  background: var(--gold-dim);
   color: var(--white);
 }
 
@@ -548,8 +548,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #00f0ff;
-  box-shadow: 0 0 8px #00f0ff;
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px var(--gold-glow);
 }
 
 /* About visual */
@@ -1352,8 +1352,8 @@
   margin-top: -25px;
   margin-left: -25px;
   border-radius: 50%;
-  border: 1.5px solid rgba(0, 240, 255, 0.85);
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.6), inset 0 0 8px rgba(77, 163, 255, 0.3);
+  border: 1.5px solid hsla(38, 92%, 56%, 0.88);
+  box-shadow: 0 0 12px hsla(38, 92%, 56%, 0.55), inset 0 0 8px hsla(38, 92%, 56%, 0.25);
   animation: clickRingPulse 0.45s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
   pointer-events: none;
 }
@@ -1367,7 +1367,7 @@
   margin-top: -14px;
   margin-left: -14px;
   border-radius: 50%;
-  border: 1px dashed rgba(77, 163, 255, 0.7);
+  border: 1px dashed hsla(42, 100%, 68%, 0.65);
   animation: clickReticlePulse 0.35s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
   pointer-events: none;
 }
@@ -1381,8 +1381,8 @@
   margin-top: -4px;
   margin-left: -4px;
   border-radius: 50%;
-  background: #00f0ff;
-  box-shadow: 0 0 10px #00f0ff, 0 0 18px rgba(77, 163, 255, 0.9);
+  background: var(--gold-bright);
+  box-shadow: 0 0 10px var(--gold-bright), 0 0 18px var(--gold-glow);
   animation: clickCoreFlash 0.22s ease-out forwards;
   pointer-events: none;
 }
@@ -1396,8 +1396,8 @@
   margin-top: -1.5px;
   margin-left: -1.5px;
   border-radius: 50%;
-  background: #00f0ff;
-  box-shadow: 0 0 6px rgba(0, 240, 255, 0.9);
+  background: var(--gold-bright);
+  box-shadow: 0 0 6px hsla(42, 100%, 68%, 0.85);
   animation: clickSparkFly 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
   pointer-events: none;
 }

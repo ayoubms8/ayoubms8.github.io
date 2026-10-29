@@ -31,7 +31,7 @@ The `s` in the owner execute position means the **SUID** bit is set.
 
 # Walkthrough :
 
-:one: Environment Setup and Reconnaissance :
+1️⃣ Environment Setup and Reconnaissance :
 
 Mount the provided ISO in VirtualBox. Connect via SSH using the level's credentials. Initial recon is the same on every level:
 
@@ -44,7 +44,7 @@ Mount the provided ISO in VirtualBox. Connect via SSH using the level's credenti
     $ crontab -l; cat /etc/cron*/* 2>/dev/null # scheduled tasks
     $ env                                      # environment variables
 
-:two: Analyzing SUID Binaries :
+2️⃣ Analyzing SUID Binaries :
 
 When a binary owned by `flagXX` has the SUID bit, exploiting it runs code as `flagXX`. First, gather static information:
 
@@ -55,7 +55,7 @@ When a binary owned by `flagXX` has the SUID bit, exploiting it runs code as `fl
 
 `ltrace` is the most powerful first step: if the binary calls `strcmp(user_input, "real_pass")`, the password is immediately visible in the trace output.
 
-:three: PATH Hijacking :
+3️⃣ PATH Hijacking :
 
 If an SUID binary calls a command using a **relative path** (e.g., `echo`) instead of an absolute path (`/bin/echo`), the shell searches `$PATH` to locate it. Prepend a directory you control:
 
@@ -71,7 +71,7 @@ If an SUID binary calls a command using a **relative path** (e.g., `echo`) inste
     $ /usr/local/bin/levelXX
     Check flag.Here is your token: <TOKEN>
 
-:four: Cron Job Injection :
+4️⃣ Cron Job Injection :
 
 Cron jobs run scripts periodically as a specific user. If a cron job owned by `flagXX` executes a **world-writable** script, inject a payload:
 
@@ -84,7 +84,7 @@ Cron jobs run scripts periodically as a specific user. If a cron job owned by `f
     # Wait for execution
     $ watch -n 1 cat /tmp/token
 
-:five: Reverse Engineering with GDB and objdump :
+5️⃣ Reverse Engineering with GDB and objdump :
 
 For compiled binaries, disassemble statically and debug dynamically:
 
@@ -102,7 +102,7 @@ For compiled binaries, disassemble statically and debug dynamically:
 
 Common pattern: a `cmp` instruction comparing a computed value against a hardcoded constant. Note the constant, convert from hex, and supply it as input.
 
-:six: Script and Interpreted Language Analysis :
+6️⃣ Script and Interpreted Language Analysis :
 
 Some levels use Lua, PHP, Python, or Bash scripts running under a privileged wrapper:
 
@@ -117,7 +117,7 @@ Some levels use Lua, PHP, Python, or Bash scripts running under a privileged wra
     -rwsr-x--- 1 flagXX levelXX ... levelXX   # wrapper
     $ cat /usr/local/bin/levelXX.pl           # inspect the script it launches
 
-:seven: Retrieving and Using Tokens :
+7️⃣ Retrieving and Using Tokens :
 
 The goal of each exploit is to execute `getflag` in the context of `flagXX`. The token printed is the SSH password for the next level.
 
@@ -132,27 +132,27 @@ The goal of each exploit is to execute `getflag` in the context of `flagXX`. The
 
 # Questions and answers
 
-:question: What is a Set-User-ID (SUID) bit and how does the kernel handle it?
+❓ What is a Set-User-ID (SUID) bit and how does the kernel handle it?
 
 > When `execve()` loads an SUID executable, the kernel sets the process's **Effective User ID (EUID)** to the file owner's UID, while the **Real User ID (RUID)** remains the caller's UID. All permission checks (reading files, executing `getflag`) are gated on the EUID — so the process operates with the file owner's privileges regardless of who launched it.
 
-:question: Why is using relative paths in SUID binaries dangerous?
+❓ Why is using relative paths in SUID binaries dangerous?
 
 > Relative command names (e.g., `echo`) are resolved by searching `$PATH`. Since `$PATH` is a user-controlled environment variable, an attacker can prepend a directory they own, place a malicious script with the same name in it, and cause the SUID process to execute their script with elevated privileges.
 
-:question: What does `2>/dev/null` do in bash commands?
+❓ What does `2>/dev/null` do in bash commands?
 
 > File descriptor `2` is Standard Error (`stderr`). Redirecting it to `/dev/null` silences all error messages. During reconnaissance with `find / -perm -4000`, the system generates thousands of "Permission denied" errors for inaccessible directories. Suppressing them makes the real results readable.
 
-:question: What is the difference between `ltrace` and `strace`?
+❓ What is the difference between `ltrace` and `strace`?
 
 > `strace` intercepts **kernel system calls** (e.g., `open()`, `read()`, `execve()`) at the userspace/kernel boundary. `ltrace` intercepts calls to **shared library functions** (e.g., `strcmp()`, `malloc()` from libc). For Snowcrash, `ltrace` is typically more useful because it reveals high-level function arguments, including hardcoded passwords passed to `strcmp`.
 
-:question: What is the difference between RUID, EUID, and Saved SUID?
+❓ What is the difference between RUID, EUID, and Saved SUID?
 
 > Linux processes maintain three UIDs. The **Real UID (RUID)** identifies who launched the process. The **Effective UID (EUID)** is used for all permission checks; for SUID binaries it is set to the file owner's UID. The **Saved Set-UID (SSUID)** is a copy of the EUID saved at exec time, allowing a process to temporarily drop and regain elevated privileges via `seteuid()`.
 
-:question: How do you identify a writable cron script?
+❓ How do you identify a writable cron script?
 
 > Examine `/etc/crontab`, `/etc/cron.d/`, `/etc/cron.hourly/`, and user crontabs with `crontab -l`. For each script a privileged cron job runs, check file permissions with `ls -la`. A script writable by your current user — or stored in a directory you can write to — can be modified to inject arbitrary commands that execute as the cron job's user at the next scheduled interval.
 

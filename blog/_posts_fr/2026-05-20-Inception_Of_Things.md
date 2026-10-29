@@ -84,7 +84,7 @@ K3d exécute des clusters K3s dans des conteneurs Docker – aucune machine virt
 
 $ curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash $ k3d cluster créer gitops-cluster \ --port "80:80@loadbalancer" \ --port "443:443@loadbalancer" \ --agents 2
 
-:cinq: Installation d'ArgoCD :
+5️⃣ Installation d'ArgoCD :
 
 Déployez ArgoCD dans son propre espace de noms et exposez son interface utilisateur via le transfert de port :
 
@@ -98,7 +98,7 @@ $ kubectl créer un espace de noms argocd $ kubectl apply -n argocd \ -f https:/
 
 # Connectez-vous via CLI $ argocd login localhost:8080 --username admin --insecure
 
-:six: Configuration du pipeline GitOps :
+6️⃣ Configuration du pipeline GitOps :
 
 Créez une ressource personnalisée ArgoCD `Application` pointant vers votre référentiel Git. ArgoCD surveillera le référentiel et synchronisera automatiquement toutes les modifications :
 

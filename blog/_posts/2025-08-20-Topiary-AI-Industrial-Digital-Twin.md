@@ -63,7 +63,7 @@ _Topiary Operator Interface: A unified dashboard featuring a control panel, real
 
 # Walkthrough :
 
-:one: The Dataset and the Problem :
+1️⃣ The Dataset and the Problem :
 
 OCP provided us with a real industrial dataset (`Data_Final.csv`) — historical sensor readings from the sulfuric acid plant covering sulfur input rates, steam admission values for each GTA, power output per turbine, and steam pressures.
 
@@ -92,7 +92,7 @@ The operator adjusts these inputs via the control sidebar:
 ![Topiary Control Sidebar](/assets/img/posts/Topiary/3.png)
 _Topiary Control Sidebar: Sliders allowing operators to adjust sulfur feed and steam admission to the three Turbo-Alternator Groups (GTAs) in real-time._
 
-:two: Training the Digital Twin (ML Model) :
+2️⃣ Training the Digital Twin (ML Model) :
 
 We trained a **Multi-Output Random Forest Regressor** — a single model that simultaneously predicts all 12 output variables from the 4 input variables. Random Forest was chosen because:
 - It handles nonlinear plant dynamics well
@@ -124,7 +124,7 @@ The key performance indicators (KPIs) at the top of the interface are updated in
 ![KPI Header](/assets/img/posts/Topiary/7.png)
 _KPI Header: Key performance indicators computed dynamically from digital twin predictions._
 
-:three: The Optimization Engine :
+3️⃣ The Optimization Engine :
 
 The Digital Twin answers "what *would* the plant produce with these settings?" The optimizer answers "what settings *should* we use to maximize output?"
 
@@ -158,7 +158,7 @@ The optimizer outputs setpoint suggestions directly to the operator interface:
 ![Optimization Suggestion](/assets/img/posts/Topiary/1.png)
 _Optimization Suggestion: The Random Search solver recommends optimal setpoints to maximize generation while respecting steam availability constraints._
 
-:four: The LLM Operator Assistant :
+4️⃣ The LLM Operator Assistant :
 
 Raw numbers are not enough for industrial operators on a shift. We integrated a **locally running Qwen 2.5** language model (served via LM Studio) to translate the optimizer's output into actionable natural language instructions:
 
@@ -177,7 +177,7 @@ In addition to plant mimic telemetry, the operator can monitor apparent power me
 ![Grid Apparent Power](/assets/img/posts/Topiary/4.png)
 _Grid Apparent Power: Telemetry monitoring the apparent power of the grid transformers._
 
-:five: Critical Safety Alerting (Twilio) :
+5️⃣ Critical Safety Alerting (Twilio) :
 
 One of the most important features for an industrial system is **real-time alerting**. We integrated the Twilio SMS API to send automatic alerts when critical plant parameters breach safety thresholds:
 
@@ -197,7 +197,7 @@ Active alerts are displayed clearly in the assistant panel of the dashboard:
 ![Active Alerts](/assets/img/posts/Topiary/6.png)
 _Active Alerts: The system instantly flags anomalous or impossible scenarios, such as when steam extraction exceeds generated steam or when turbine consumption is too high._
 
-:six: Deployment with Docker Compose :
+6️⃣ Deployment with Docker Compose :
 
 The entire application was containerized for one-command deployment — essential in a hackathon environment where judges need to run the project without manual environment setup:
 
@@ -212,23 +212,23 @@ The backend uses `network_mode: host` to allow it to reach the LM Studio local L
 
 # Questions and answers
 
-:question: What is a Digital Twin and how is it different from a simulation?
+❓ What is a Digital Twin and how is it different from a simulation?
 
 > A traditional simulation is a standalone model run to explore scenarios — it is disconnected from the real world. A Digital Twin is a model that is **continuously synchronized** with a real physical system via live sensor data. It mirrors the current state of the physical system in real-time, allowing operators to monitor what is happening, predict what will happen, and test "what-if" scenarios against the real system state without risk. Topiary creates the simulation layer; in a production deployment, it would be connected to the plant's SCADA/DCS via an API to receive live sensor readings.
 
-:question: Why use a Random Forest instead of a physics-based model for the Digital Twin?
+❓ Why use a Random Forest instead of a physics-based model for the Digital Twin?
 
 > A physics-based (first-principles) model of a sulfuric acid plant would require deep thermodynamic domain knowledge, weeks of calibration, and validated mass-energy balances. In a 48-hour hackathon, this was not feasible. A Random Forest trained on historical data captures the real input-output relationships of the plant — including non-ideal behaviors, wear, and calibration drift — without requiring an equation for every physical process. The tradeoff is that it cannot extrapolate beyond the training data distribution, but for operating within normal parameters it is highly effective.
 
-:question: Why was Qwen 2.5 run locally via LM Studio instead of using an API like GPT-4?
+❓ Why was Qwen 2.5 run locally via LM Studio instead of using an API like GPT-4?
 
 > Two reasons: cost and data privacy. Industrial plant data is commercially sensitive — sending it to an external API endpoint creates a data governance risk. Running the LLM locally via LM Studio means all data stays within the local network. Additionally, for a hackathon demo, local inference avoids API rate limits and network latency. The `LLM_BASE_URL` environment variable is abstracted, so the same code can point to any OpenAI-compatible API endpoint in production.
 
-:question: Why is Random Search effective for optimizing a Random Forest's output?
+❓ Why is Random Search effective for optimizing a Random Forest's output?
 
 > Random Forest models are piecewise constant — they partition the input space into rectangular regions and predict the same value for all points in a region. This means the output surface has no gradients; gradient-based optimizers like SGD or Adam would get stuck immediately. Random Search uniformly explores the input space and is guaranteed to find a good solution given enough iterations. With only 3 continuous inputs (GTA1, GTA2, GTA3) and a 1000-iteration budget, it finds near-optimal solutions in milliseconds on any modern CPU.
 
-:question: What would be needed to deploy Topiary in a real production environment?
+❓ What would be needed to deploy Topiary in a real production environment?
 
 > Several additions would be required: (1) **Real-time data ingestion** — connecting the backend to the plant's SCADA/DCS system via OPC-UA or a REST/MQTT gateway to replace manual input with live sensor streams. (2) **Model retraining pipeline** — as the plant ages and operating conditions drift, the model needs to be retrained periodically on fresh data. (3) **Authentication and access control** — the API endpoints must be secured. (4) **Redundancy and failover** — industrial systems require high availability. (5) **Model monitoring** — tracking prediction drift to detect when the model is no longer accurate.
 

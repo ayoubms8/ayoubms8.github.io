@@ -22,11 +22,11 @@ Below is the main application Dashboard, showcasing the entry point for players,
 
 ![Application Dashboard](/assets/img/posts/ft_transcendence/dashboard.png)
 
-:one: System Architecture :
+1️⃣ System Architecture :
 
 Define a clean separation of concerns. The backend acts as a RESTful API and WebSocket server. The frontend handles state management and rendering. Both are containerized using Docker.
 
-:two: Database Schema (PostgreSQL) :
+2️⃣ Database Schema (PostgreSQL) :
 
 Design the relational database schemas. Key entities include Users, Matches, Channels, and Messages. Utilize an ORM (like Prisma or TypeORM) to map objects to database tables.
 
@@ -38,7 +38,7 @@ Design the relational database schemas. Key entities include Users, Matches, Cha
       status    String   @default("offline")
     }
 
-:three: Authentication and OAuth2 :
+3️⃣ Authentication and OAuth2 :
 
 Implement the authorization code flow. When a user clicks "Login with 42", redirect them to the 42 API authorization endpoint. Handle the callback, extract the authorization code, and exchange it for an access token. Generate a local JSON Web Token (JWT) to maintain the session state on the client side.
 
@@ -58,13 +58,13 @@ Additionally, we implemented Two-Factor Authentication (2FA) via Google Authenti
 
 ![Two-Factor Authentication Setup](/assets/img/posts/ft_transcendence/auth-2fa.png)
 
-:four: Chat and Channels (Real-time Messaging) :
+4️⃣ Chat and Channels (Real-time Messaging) :
 
 The platform includes a fully-featured chat page supporting direct messages, public/private/password-protected channels, and real-time moderation controls (muting, banning, kicking, and designating admins). Users can also block others or directly invite them to a game from the chat interface:
 
 ![Chat Page](/assets/img/posts/ft_transcendence/chat-interface.png)
 
-:five: Real-time Communication (WebSockets Gateways) :
+5️⃣ Real-time Communication (WebSockets Gateways) :
 
 To achieve low-latency updates for both chat messages and game coordinates, we instantiate WebSocket gateways. In NestJS, this is managed using `@WebSocketGateway()`, allowing bidirectionally persistent connections between the clients and server.
 
@@ -76,7 +76,7 @@ To achieve low-latency updates for both chat messages and game coordinates, we i
       }
     }
 
-:six: Pong Game Engine :
+6️⃣ Pong Game Engine :
 
 The authoritative game state must reside on the server to prevent client-side manipulation (cheating). The server calculates ball velocity, paddle collisions, and score updates at a fixed tick rate, broadcasting the updated coordinate data to connected clients. The frontend framework parses this data and renders the elements on a `<canvas>` using Three.js or standard Canvas rendering.
 
@@ -95,7 +95,7 @@ The game is divided into three distinct match options:
 **Tournament mode** — a bracket-based competition where players are matched sequentially until a winner is determined :
 
 
-:seven: User Profiles & Game Statistics :
+7️⃣ User Profiles & Game Statistics :
 
 Each player has a dedicated profile that displays game statistics (total games, win rate, ELO rating, wins/losses) and a complete match history. ELO ratings and performance are charted dynamically to showcase progress:
 
@@ -107,15 +107,15 @@ A detailed view displays the recent Match History with win/loss details, ELO his
 
 # Questions and answers
 
-:question: What is the purpose of a JSON Web Token (JWT)?
+❓ What is the purpose of a JSON Web Token (JWT)?
 
 > A JWT is a compact, URL-safe means of representing claims to be transferred between two parties. It allows the server to verify the user's identity without storing session state in the database or server memory, as the token itself contains a cryptographically signed payload proving its validity.
 
-:question: How do WebSockets differ from standard HTTP requests?
+❓ How do WebSockets differ from standard HTTP requests?
 
 > HTTP is a unidirectional, stateless protocol where the client initiates a request and the server returns a response, after which the connection closes. WebSockets establish a persistent, bidirectional TCP connection, allowing either the client or the server to push data at any time with minimal overhead.
 
-:question: Why should the game logic run on the server?
+❓ Why should the game logic run on the server?
 
 > Running authoritative game logic on the server ensures state consistency across all clients and mitigates client-side exploits. If the client calculated the ball's position, a modified client could arbitrarily alter the coordinates and transmit false data to the server.
 

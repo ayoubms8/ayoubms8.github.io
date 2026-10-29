@@ -18,13 +18,13 @@ Inception est un projet 1337 qui vise à élargir les connaissances en administr
 
 :avertissement : Ce projet nécessite la création d'images Docker personnalisées à partir de l'avant-dernière version stable d'Alpine Linux ou Debian. Aucune image d'application prédéfinie (comme `nginx:latest`) n'est autorisée.
 
-:one: Configuration de la machine virtuelle :
+1️⃣ Configuration de la machine virtuelle :
 
 Assurez-vous que Docker et Docker Compose sont installés sur votre machine hôte.
 
 sudo apt update sudo apt installer docker.io docker-compose
 
-:deux: Structuration du projet :
+2️⃣ Structuration du projet :
 
 La structure requise isole chaque service dans son propre répertoire contenant un `Dockerfile` personnalisé et des scripts d'installation.
 
@@ -38,7 +38,7 @@ réseaux : inception_net : pilote : pont
 
 volumes : wordpress_data : pilote : local driver_opts : type : aucun o : périphérique de liaison : /home/user/data/wordpress
 
-:four: Écriture des fichiers Docker :
+4️⃣ Écriture des fichiers Docker :
 
 Chaque service nécessite son propre processus PID 1. Par exemple, le conteneur Nginx doit exécuter le démon Nginx au premier plan.
 

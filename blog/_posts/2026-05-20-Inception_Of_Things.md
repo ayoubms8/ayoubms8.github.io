@@ -50,7 +50,7 @@ Inception of Things is a 1337 project focused on clustered orchestration. It is 
 
 # Walkthrough :
 
-:one: Virtual Machine Provisioning with Vagrant :
+1️⃣ Virtual Machine Provisioning with Vagrant :
 
 Write a `Vagrantfile` to define and provision the cluster topology. The project requires a dedicated server node and one or more agent (worker) nodes, each with a static private IP and sufficient memory:
 
@@ -79,7 +79,7 @@ Write a `Vagrantfile` to define and provision the cluster topology. The project 
       end
     end
 
-:two: Bootstrapping K3s (Server and Agent) :
+2️⃣ Bootstrapping K3s (Server and Agent) :
 
 The server provisioning script installs K3s in server mode and exposes the `node-token` for agents to join. The `--write-kubeconfig-mode 644` flag allows the `vagrant` user to use `kubectl` without root:
 
@@ -109,7 +109,7 @@ Verify from the server node:
     alemsafiS    Ready    control-plane,master   5m    v1.28.3   192.168.56.110
     alemsafiSW   Ready    <none>                 3m    v1.28.3   192.168.56.111
 
-:three: Deploying Applications with Ingress Routing (Part 2) :
+3️⃣ Deploying Applications with Ingress Routing (Part 2) :
 
 K3s ships with Traefik as the default Ingress controller. Define Kubernetes Deployment, Service, and Ingress manifests to expose multiple applications on the same IP, differentiated by hostname:
 
@@ -166,7 +166,7 @@ Apply all manifests and verify:
     $ kubectl apply -f app1-deployment.yaml
     $ kubectl get pods,svc,ingress
 
-:four: Setting up K3d for the GitOps Lab (Part 3) :
+4️⃣ Setting up K3d for the GitOps Lab (Part 3) :
 
 K3d runs K3s clusters inside Docker containers — no VMs needed. Install K3d and create a cluster with port mappings for the Ingress controller:
 
@@ -176,7 +176,7 @@ K3d runs K3s clusters inside Docker containers — no VMs needed. Install K3d an
         --port "443:443@loadbalancer" \
         --agents 2
 
-:five: Installing ArgoCD :
+5️⃣ Installing ArgoCD :
 
 Deploy ArgoCD into its own namespace and expose its UI via port-forward:
 
@@ -197,7 +197,7 @@ Deploy ArgoCD into its own namespace and expose its UI via port-forward:
     # Login via CLI
     $ argocd login localhost:8080 --username admin --insecure
 
-:six: Configuring the GitOps Pipeline :
+6️⃣ Configuring the GitOps Pipeline :
 
 Create an ArgoCD `Application` custom resource pointing to your Git repository. ArgoCD will watch the repository and automatically sync any changes:
 
@@ -227,7 +227,7 @@ Create an ArgoCD `Application` custom resource pointing to your Git repository. 
     $ argocd app get my-app
     $ argocd app sync my-app   # force an immediate sync
 
-:seven: Verifying GitOps Reconciliation :
+7️⃣ Verifying GitOps Reconciliation :
 
 The true test of a GitOps pipeline is proving that it self-heals. Manually delete a deployment from the cluster — ArgoCD should detect the drift and restore it within seconds:
 
@@ -242,27 +242,27 @@ The true test of a GitOps pipeline is proving that it self-heals. Manually delet
 
 # Questions and answers
 
-:question: What is the difference between Docker Compose and Kubernetes?
+❓ What is the difference between Docker Compose and Kubernetes?
 
 > Docker Compose defines and runs multi-container applications on a **single host**. It is excellent for local development but has no concept of scheduling, failover, or cross-host networking. Kubernetes manages containers across a **cluster of many machines**, providing scheduling (placing workloads on appropriate nodes), self-healing (restarting failed containers), auto-scaling, rolling updates, and service discovery — making it the standard for production workloads.
 
-:question: Why use K3s instead of standard Kubernetes (K8s)?
+❓ Why use K3s instead of standard Kubernetes (K8s)?
 
 > Standard K8s requires `etcd`, multiple control plane components, and high memory overhead — impractical for VMs with 1GB of RAM. K3s bundles everything into a single binary (~70MB), replaces `etcd` with SQLite by default, and uses less than 512MB of RAM. It is fully conformant with the Kubernetes API, so all standard `kubectl` commands and manifests work identically — making it ideal for edge devices, IoT, and local development VMs.
 
-:question: What constitutes the GitOps methodology?
+❓ What constitutes the GitOps methodology?
 
 > GitOps has four core principles: (1) **Declarative** — the desired system state is expressed as declarations, not imperative scripts. (2) **Versioned and immutable** — all desired state is stored in Git; history is preserved and changes are auditable. (3) **Pulled automatically** — software agents inside the system pull the desired state from Git rather than having external systems push changes in. (4) **Continuously reconciled** — agents continuously compare actual state to desired state and converge any differences automatically.
 
-:question: What is a Kubernetes Ingress and how does it differ from a Service?
+❓ What is a Kubernetes Ingress and how does it differ from a Service?
 
 > A Kubernetes `Service` exposes a group of Pods internally within the cluster (or via a cloud LoadBalancer externally), but it works at Layer 4 (TCP/UDP) and assigns each service its own external IP. An `Ingress` operates at Layer 7 (HTTP/HTTPS) and acts as a single entry point for multiple services, routing requests to different backends based on the **hostname** or **URL path** in the HTTP request. This allows many applications to share one load balancer IP, differentiated by routing rules.
 
-:question: What is the difference between K3s and K3d?
+❓ What is the difference between K3s and K3d?
 
 > K3s is a lightweight Kubernetes distribution packaged as a single binary, designed to run on physical or virtual machines. K3d is a wrapper tool that runs K3s **inside Docker containers**, creating multi-node clusters without requiring VMs. K3d is ideal for local CI/CD and GitOps lab environments because clusters can be created and destroyed in seconds with a single command, and there is no hypervisor dependency.
 
-:question: What do ArgoCD's `prune` and `selfHeal` sync policies do?
+❓ What do ArgoCD's `prune` and `selfHeal` sync policies do?
 
 > `prune: true` tells ArgoCD to **delete** Kubernetes resources from the cluster if they have been removed from the Git repository. Without this, resources orphaned from Git would remain in the cluster indefinitely. `selfHeal: true` enables **automatic reconciliation** — if someone manually modifies or deletes a resource in the cluster without going through Git, ArgoCD detects the drift and reverts it to match the Git-defined state. Together, these two flags enforce that Git is the strict and only source of truth.
 

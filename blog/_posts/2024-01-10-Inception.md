@@ -16,16 +16,16 @@ Inception is a 1337 project that aims to broaden system administration knowledge
 
 # Walkthrough :
 
-:warning: This project requires building custom Docker images from the penultimate stable version of Alpine Linux or Debian. No pre-built application images (like `nginx:latest`) are allowed.
+⚠️ This project requires building custom Docker images from the penultimate stable version of Alpine Linux or Debian. No pre-built application images (like `nginx:latest`) are allowed.
 
-:one: Setting up the Virtual Machine :
+1️⃣ Setting up the Virtual Machine :
 
 Ensure your host machine has Docker and Docker Compose installed.
 
     sudo apt update
     sudo apt install docker.io docker-compose
 
-:two: Structuring the project :
+2️⃣ Structuring the project :
 
 The required structure isolates each service into its own directory containing a custom `Dockerfile` and setup scripts.
 
@@ -37,7 +37,7 @@ The required structure isolates each service into its own directory containing a
         ├── mariadb/
         └── wordpress/
 
-:three: Configuring the Docker Network and Volumes :
+3️⃣ Configuring the Docker Network and Volumes :
 
 In the `docker-compose.yml`, define a bridge network to allow inter-container communication and volume mounts for persistent data storage.
 
@@ -53,7 +53,7 @@ In the `docker-compose.yml`, define a bridge network to allow inter-container co
           o: bind
           device: /home/user/data/wordpress
 
-:four: Writing the Dockerfiles :
+4️⃣ Writing the Dockerfiles :
 
 Each service requires its own PID 1 process. For example, the Nginx container must execute the Nginx daemon in the foreground.
 
@@ -63,7 +63,7 @@ Each service requires its own PID 1 process. For example, the Nginx container mu
     # Generate TLS certificates here
     CMD ["nginx", "-g", "daemon off;"]
 
-:five: Orchestrating the Startup :
+5️⃣ Orchestrating the Startup :
 
 Execute the stack using Docker Compose.
 
@@ -71,15 +71,15 @@ Execute the stack using Docker Compose.
 
 # Questions and answers
 
-:question: What is the difference between a Virtual Machine and a Docker Container?
+❓ What is the difference between a Virtual Machine and a Docker Container?
 
 > A virtual machine includes a full guest operating system and relies on a hypervisor to emulate hardware. A Docker container packages the application and its dependencies, running as an isolated process in user space while sharing the host operating system's kernel.
 
-:question: Why must Nginx run with `daemon off`?
+❓ Why must Nginx run with `daemon off`?
 
 > Docker containers terminate when the primary process (PID 1) exits. If Nginx runs as a background daemon, the initial foreground process completes, causing Docker to immediately stop the container.
 
-:question: What is a volume in Docker?
+❓ What is a volume in Docker?
 
 > A volume is a mechanism for persisting data generated and used by Docker containers. Volumes are stored within a part of the host filesystem which is managed by Docker (`/var/lib/docker/volumes/` on Linux), ensuring data outlives the container lifecycle.
 

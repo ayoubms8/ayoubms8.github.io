@@ -48,7 +48,7 @@ Un routeur FRRouting, un hôte Alpine. L'objectif est simplement de configurer l
 ---
 # Procédure pas à pas
 
-## :one: Partie 1 — Configuration de GNS3 et de la connectivité de base
+## 1️⃣ Partie 1 — Configuration de GNS3 et de la connectivité de base
 
 Installez GNS3 et la machine virtuelle GNS3, qui fournit un environnement de virtualisation imbriqué pour les nœuds basés sur Docker. Extrayez les images Docker requises :
 
@@ -177,9 +177,9 @@ routeur bgp 65000 bgp router-id 2.2.2.2 pas de bgp par défaut ipv4-unicast !   
 
 # État de la session BGP — tous les voisins doivent être un routeur établi
 
-# Table de routage EVPN — Routes de type 2 (MAC/IP) et de type 3 (IMET) Routeur# show bgp l2vpn evpn Distinguisher de route : 2.2.2.2:10 *> [2]:[0]:[48]:[aa:bb:cc:dd:ee:ff] Publicité MAC/IP *> [3]:[0]:[32]:[2.2.2.2] IMET (multidiffusion incluse)
+# Table de routage EVPN — Routes de type 2 (MAC/IP) et de type 3 (IMET) Routeur# show bgp l2vpn evpn Distinguisher de route : 2.2.2.2:10 *> [2]:[0]:[48]:[aa🔷cc🔹ee:ff] Publicité MAC/IP *> [3]:[0]:[32]:[2.2.2.2] IMET (multidiffusion incluse)
 
-# Le FDB du noyau doit afficher les MAC distants appris via BGP, et non en inondant le routeur # show evpn mac vni 10 VNI 10 MAC Remote VTEP State aa:bb:cc:dd:ee:ff 3.3.3.3 distant (BGP)
+# Le FDB du noyau doit afficher les MAC distants appris via BGP, et non en inondant le routeur # show evpn mac vni 10 VNI 10 MAC Remote VTEP State aa🔷cc🔹ee:ff 3.3.3.3 distant (BGP)
 
 # Ping de bout en bout à travers la structure Host1# ping 12.12.12.2 64 octets à partir de 12.12.12.2 : seq=0 ttl=64 time=1,8 ms
 

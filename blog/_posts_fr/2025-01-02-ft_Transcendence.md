@@ -64,7 +64,7 @@ Pour obtenir des mises à jour à faible latence pour les messages de discussion
 
 @WebSocketGateway({ cors: true }) classe d'exportation GameGateway implémente OnGatewayConnection { @SubscribeMessage('playerMove') handleMove (@MessageBody() data: any, @ConnectedSocket() client: Socket) { // Calculer la physique et diffuser la position mise à jour de la palette } }
 
-:six: Moteur de jeu Pong :
+6️⃣ Moteur de jeu Pong :
 
 L'état de jeu faisant autorité doit résider sur le serveur pour empêcher toute manipulation côté client (tricherie). Le serveur calcule la vitesse de la balle, les collisions de palettes et les mises à jour des scores à un rythme fixe, diffusant les données de coordonnées mises à jour aux clients connectés. Le framework frontend analyse ces données et restitue les éléments sur un `<canvas>` à l'aide de Three.js ou du rendu Canvas standard.
 
@@ -83,7 +83,7 @@ Le jeu est divisé en trois options de match distinctes :
 **Mode Tournoi** — une compétition basée sur des tranches où les joueurs sont affrontés séquentiellement jusqu'à ce qu'un gagnant soit déterminé :
 
 
-:seven: Profils utilisateur et statistiques de jeu :
+7️⃣ Profils utilisateur et statistiques de jeu :
 
 Chaque joueur dispose d'un profil dédié qui affiche les statistiques de jeu (total des parties, taux de victoire, classement ELO, victoires/défaites) et un historique complet des matchs. Les notes et les performances ELO sont tracées de manière dynamique pour montrer les progrès :
 

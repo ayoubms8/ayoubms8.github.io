@@ -75,7 +75,7 @@ One FRRouting router, one Alpine host. The goal is simply to configure interface
 
 # Walkthrough
 
-## :one: Part 1 — Setting Up GNS3 and Basic Connectivity
+## 1️⃣ Part 1 — Setting Up GNS3 and Basic Connectivity
 
 Install GNS3 and the GNS3 VM, which provides a nested virtualization environment for Docker-based nodes. Pull the required Docker images:
 
@@ -123,7 +123,7 @@ At this stage, all routers can reach each other across the switch via the `11.11
 
 ---
 
-## :two: Part 2 — VXLAN Overlay with Flood-and-Learn
+## 2️⃣ Part 2 — VXLAN Overlay with Flood-and-Learn
 
 In Part 2, each router becomes a **VTEP** (VXLAN Tunnel Endpoint). VXLAN encapsulates Layer 2 Ethernet frames inside UDP/IP packets, extending a virtual L2 segment (`12.12.12.0/24`) across the `11.11.11.0/24` underlay.
 
@@ -207,7 +207,7 @@ In flood-and-learn mode, the first packet to an unknown MAC is flooded to all re
 
 ---
 
-## :three: Part 3 — Replacing Flood-and-Learn with BGP EVPN
+## 3️⃣ Part 3 — Replacing Flood-and-Learn with BGP EVPN
 
 In Part 2, each VTEP needs a hardcoded list of all remote VTEPs, and MAC addresses are learned by flooding. In large fabrics this is untenable. **BGP EVPN** fixes both problems:
 
@@ -299,14 +299,14 @@ One router acts as the **Route Reflector** — it has iBGP sessions with all lea
     # EVPN route table — Type-2 (MAC/IP) and Type-3 (IMET) routes
     Router# show bgp l2vpn evpn
     Route Distinguisher: 2.2.2.2:10
-       *> [2]:[0]:[48]:[aa:bb:cc:dd:ee:ff]   MAC/IP Advertisement
+       *> [2]:[0]:[48]:[aa🔷cc🔹ee:ff]   MAC/IP Advertisement
        *> [3]:[0]:[32]:[2.2.2.2]              IMET (Inclusive Multicast)
 
     # Kernel FDB should show remote MACs learned via BGP, not by flooding
     Router# show evpn mac vni 10
     VNI 10
     MAC               Remote VTEP        State
-    aa:bb:cc:dd:ee:ff 3.3.3.3            remote (BGP)
+    aa🔷cc🔹ee:ff 3.3.3.3            remote (BGP)
 
     # End-to-end ping across the fabric
     Host1# ping 12.12.12.2
@@ -319,39 +319,39 @@ One router acts as the **Route Reflector** — it has iBGP sessions with all lea
 
 # Questions and Answers
 
-:question: What is an Autonomous System (AS)?
+❓ What is an Autonomous System (AS)?
 
 > An Autonomous System is a collection of IP routing prefixes under the administrative control of one or more network operators that presents a **single, coherent routing policy** to the rest of the internet. Each AS is identified by a globally unique **Autonomous System Number (ASN)** assigned by IANA or a Regional Internet Registry (RIR). BGP is the interdomain routing protocol that exchanges reachability information between ASes. ASNs can be 16-bit (1–65535) or 32-bit (up to ~4.3 billion), with 64512–65535 reserved for private use.
 
-:question: What is the difference between iBGP and eBGP?
+❓ What is the difference between iBGP and eBGP?
 
 > **eBGP (External BGP)** sessions are formed between routers in **different** Autonomous Systems. The TTL of eBGP packets is 1 by default, meaning peers must typically be directly connected. **iBGP (Internal BGP)** sessions are formed between routers **within the same** AS to propagate externally learned routes across the AS. A critical iBGP rule is the **split-horizon rule**: routes learned from one iBGP peer cannot be re-advertised to another iBGP peer. This is solved by either a **full-mesh** iBGP topology or a **Route Reflector** (one router redistributes routes to all iBGP clients, as used in this project).
 
-:question: Why are VXLAN and bridge interfaces configured in a script rather than by FRRouting?
+❓ Why are VXLAN and bridge interfaces configured in a script rather than by FRRouting?
 
 > FRRouting manages routing protocol state and updates the kernel routing table, but it does not create arbitrary Linux network interfaces. VXLAN tunnel interfaces (`ip link add ... type vxlan`) and bridge interfaces (`ip link add ... type bridge`) are pure Linux kernel constructs. They must be created and brought up **before** the FRRouting daemons start — otherwise, FRRouting cannot reference them in its config. By running a setup script as the Docker `ENTRYPOINT` (before calling `docker-start`), we guarantee the kernel interfaces are ready when FRRouting initializes.
 
-:question: Why does GNS3 handle `eth0` but not the VXLAN interfaces?
+❓ Why does GNS3 handle `eth0` but not the VXLAN interfaces?
 
 > GNS3 presents virtual ethernet interfaces to Docker containers based on the links drawn in the topology canvas. When you connect a router node to the switch in GNS3, it wires a veth pair into the container and presents it as `eth0`. GNS3 knows nothing about VXLAN or bridge interfaces — those are overlay constructs that exist logically above the underlay. The underlay (`eth0`, `11.11.11.0/24`) is GNS3's job; the overlay (VXLAN, bridge, `12.12.12.0/24`) is the application's job.
 
-:question: What is VXLAN and why is it needed in modern data centers?
+❓ What is VXLAN and why is it needed in modern data centers?
 
 > VXLAN (Virtual Extensible LAN, RFC 7348) is a network overlay protocol that encapsulates Layer 2 Ethernet frames inside Layer 3 UDP packets (port 4789). It was created to overcome the VLAN limitation of 4096 unique segments — VXLAN uses a 24-bit VNI (VXLAN Network Identifier), allowing over 16 million virtual segments. In modern data centers with thousands of tenants and containers, this scale is essential. VXLAN allows Layer 2 adjacency to be extended across a routed Layer 3 underlay — a technique called an **overlay network**.
 
-:question: What is BGP EVPN and why is it used with VXLAN?
+❓ What is BGP EVPN and why is it used with VXLAN?
 
 > BGP EVPN (Ethernet VPN, RFC 7432 + RFC 8365) is an address family extension to BGP that carries MAC address and IP reachability information as BGP routes. When combined with VXLAN, it replaces the traditional **flood-and-learn** mechanism (where unknown MACs are flooded to all VTEPs) with a **control-plane-driven** approach. Each VTEP advertises its locally learned MAC/IP bindings via BGP EVPN Type-2 routes, and VTEP membership via Type-3 IMET routes. This eliminates BUM (Broadcast, Unknown unicast, Multicast) flooding, dramatically reducing unnecessary traffic in large fabrics.
 
-:question: What is a VTEP and what role does it play?
+❓ What is a VTEP and what role does it play?
 
 > A VTEP (VXLAN Tunnel Endpoint) is a network device (physical or virtual) that originates and terminates VXLAN tunnels. On the sending side, it encapsulates an Ethernet frame with a VXLAN header (containing the VNI), a UDP header (port 4789), and an outer IP header (using the VTEP's loopback IP as source). On the receiving side, it strips the outer headers and delivers the original Ethernet frame to the local bridge. In this project, each FRRouting router acts as a VTEP.
 
-:question: What are BGP EVPN route types?
+❓ What are BGP EVPN route types?
 
 > BGP EVPN defines several route types. **Type 1 (Ethernet Auto-Discovery)**: used for multi-homing fast convergence. **Type 2 (MAC/IP Advertisement)**: carries a specific MAC address and optionally its associated IP address, allowing VTEPs to learn remote MAC-to-VTEP mappings without flooding. **Type 3 (Inclusive Multicast Ethernet Tag / IMET)**: advertises a VTEP's participation in a VNI, replacing the static FDB flood entries from Part 2. **Type 5 (IP Prefix Route)**: carries IP prefixes for inter-subnet routing. Types 2 and 3 are what `advertise-all-vni` generates automatically.
 
-:question: What is `advertise-all-vni` in FRRouting?
+❓ What is `advertise-all-vni` in FRRouting?
 
 > `advertise-all-vni` is an FRRouting BGP EVPN directive that tells the daemon to automatically discover all VXLAN interfaces present in the kernel (those created by the setup script) and generate the corresponding BGP EVPN routes (Type-2 and Type-3) for each VNI. Without it, you would have to manually configure each VNI under the `address-family l2vpn evpn` stanza. It only works because the VXLAN interfaces already exist when FRRouting starts — another reason the setup script must run first.
 

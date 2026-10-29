@@ -102,7 +102,7 @@ L'optimiseur émet des suggestions de points de consigne directement sur l'inter
 
 ![Suggestion d'optimisation](/assets/img/posts/Topiary/1.png) _Suggestion d'optimisation : le solveur de recherche aléatoire recommande des points de consigne optimaux pour maximiser la génération tout en respectant les contraintes de disponibilité de la vapeur._
 
-:quatre: L'assistant opérateur LLM :
+4️⃣ L'assistant opérateur LLM :
 
 Les chiffres bruts ne suffisent pas aux opérateurs industriels en poste. Nous avons intégré un modèle de langage Qwen 2.5 **exécuté localement (servi via LM Studio) pour traduire la sortie de l'optimiseur en instructions exploitables en langage naturel :
 
@@ -128,7 +128,7 @@ Les alertes actives sont affichées clairement dans le panneau assistant du tabl
 
 ![Alertes actives](/assets/img/posts/Topiary/6.png) _Alertes actives : le système signale instantanément les scénarios anormaux ou impossibles, par exemple lorsque l'extraction de vapeur dépasse la vapeur générée ou lorsque la consommation de la turbine est trop élevée._
 
-:six: Déploiement avec Docker Compose :
+6️⃣ Déploiement avec Docker Compose :
 
 L'ensemble de l'application a été conteneurisé pour un déploiement en une seule commande, ce qui est essentiel dans un environnement de hackathon où les juges doivent exécuter le projet sans configuration manuelle de l'environnement :
 

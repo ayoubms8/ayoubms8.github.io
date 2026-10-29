@@ -1,5 +1,5 @@
 ---
-title: "Création des choses - Kubernetes et GitOps"
+title: "Inception of Things - Kubernetes et GitOps"
 date: 2026-05-20 10:00:00 +0100
 categories: [DevOps, Container Orchestration, Cloud Native]
 tags: [Kubernetes, K3s, K3d, Vagrant, ArgoCD, GitOps, Helm, CI/CD]
